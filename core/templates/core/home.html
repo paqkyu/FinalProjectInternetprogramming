@@ -1,0 +1,200 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+StefGym - Home
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-section d-flex align-items-center text-center">
+    <div class="container">
+        <div class="hero-copy">
+
+            <p class="eyebrow text-uppercase">
+                Train Smarter
+            </p>
+
+            <h1 class="display-3 fw-bold">
+                Build Your Strongest Self
+            </h1>
+
+            <p class="lead">
+                Discover fitness products, gym memberships, and training
+                programs designed around your goals.
+            </p>
+
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#products" class="btn btn-primary rounded-pill px-4">
+                    Browse Products
+                </a>
+
+                <a
+                    href="#memberships"
+                    class="btn btn-outline-light rounded-pill px-4"
+                >
+                    View Memberships
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<section id="products" class="home-products-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="eyebrow text-uppercase">StefGym Store</p>
+            <h2 class="fw-bold">Featured Products</h2>
+
+            <p>
+                A preview of products that will later come from the Django
+                catalogue database.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <article class="home-product-card h-100 p-4">
+                    <i class="bi bi-bag product-icon"></i>
+
+                    <h3 class="h4">Resistance Bands</h3>
+
+                    <p>
+                        A portable resistance-band set for strength, mobility,
+                        and recovery exercises.
+                    </p>
+
+                    <p class="product-price">€24.99</p>
+
+                    <a href="#" class="btn btn-primary">
+                        View Product
+                    </a>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="home-product-card h-100 p-4">
+                    <i class="bi bi-bag product-icon"></i>
+
+                    <h3 class="h4">Training Gloves</h3>
+
+                    <p>
+                        Comfortable gym gloves designed to improve grip during
+                        weight training.
+                    </p>
+
+                    <p class="product-price">€19.99</p>
+
+                    <a href="#" class="btn btn-primary">
+                        View Product
+                    </a>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="home-product-card h-100 p-4">
+                    <i class="bi bi-bag product-icon"></i>
+
+                    <h3 class="h4">Foam Roller</h3>
+
+                    <p>
+                        A recovery tool designed to reduce muscle tension after
+                        exercise.
+                    </p>
+
+                    <p class="product-price">€29.99</p>
+
+                    <a href="#" class="btn btn-primary">
+                        View Product
+                    </a>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<section id="memberships" class="membership-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="eyebrow text-uppercase">Memberships</p>
+            <h2 class="fw-bold">Choose Your Plan</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <article class="membership-card h-100">
+                    <h3 class="h4">Basic</h3>
+
+                    <p>
+                        Access to gym equipment during standard opening hours.
+                    </p>
+
+                    <p class="membership-price">
+                        €25 <span>/ month</span>
+                    </p>
+
+                    <a href="#" class="btn btn-outline-light rounded-pill">
+                        Select Plan
+                    </a>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="membership-card h-100 featured-membership">
+                    <span class="badge bg-success mb-3">Popular</span>
+
+                    <h3 class="h4">Premium</h3>
+
+                    <p>
+                        Full gym access, fitness classes, and one monthly
+                        trainer consultation.
+                    </p>
+
+                    <p class="membership-price">
+                        €45 <span>/ month</span>
+                    </p>
+
+                    <a href="#" class="btn btn-primary rounded-pill">
+                        Select Plan
+                    </a>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="membership-card h-100">
+                    <h3 class="h4">Elite</h3>
+
+                    <p>
+                        Premium access with personal training and recovery
+                        services.
+                    </p>
+
+                    <p class="membership-price">
+                        €75 <span>/ month</span>
+                    </p>
+
+                    <a href="#" class="btn btn-outline-light rounded-pill">
+                        Select Plan
+                    </a>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+StefGym - About
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="about-hero py-5 text-center">
+    <div class="container">
+        <p class="about-eyebrow text-uppercase">About StefGym</p>
+
+        <h1 class="display-4 fw-bold">
+            Helping You Become Stronger
+        </h1>
+
+        <p class="lead">
+            StefGym provides fitness products, memberships, and professional
+            support for people at every stage of their fitness journey.
+        </p>
+    </div>
+</section>
+
+<section class="about-section py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <img
+                    src="{% static 'images/about-gym.jpg' %}"
+                    alt="StefGym"
+                    class="about-main-image"
+                >
+            </div>
+
+            <div class="col-lg-6">
+                <p class="about-eyebrow text-uppercase">Our Story</p>
+
+                <h2 class="fw-bold mb-3">
+                    More Than Just a Gym
+                </h2>
+
+                <p>
+                    StefGym was created by Stefanos Paiste to make fitness more accessible and
+                    easier to understand. We provide gym memberships, training
+                    support, and carefully selected fitness products.
+                </p>
+
+                <p>
+                    Our goal is to help customers find the equipment, services,
+                    and guidance that match their individual fitness goals.
+                </p>
+
+                <p>
+                    Whether someone is beginning their fitness journey or is an
+                    experienced athlete, StefGym aims to provide a supportive
+                    and welcoming environment.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="values-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="about-eyebrow text-uppercase">Our Values</p>
+            <h2 class="fw-bold">What StefGym Represents</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <span class="value-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </span>
+
+                    <h3 class="h4">Community</h3>
+
+                    <p>
+                        We create an inclusive environment where members can
+                        support and motivate each other.
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <span class="value-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </span>
+
+                    <h3 class="h4">Progress</h3>
+
+                    <p>
+                        We encourage realistic goals, consistent training, and
+                        long-term personal development.
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <span class="value-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </span>
+
+                    <h3 class="h4">Quality</h3>
+
+                    <p>
+                        We aim to provide reliable fitness products, professional
+                        services, and a safe training environment.
+                    </p>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="team-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="about-eyebrow text-uppercase">Meet the Team</p>
+            <h2 class="fw-bold">Our Trainers</h2>
+
+            <p>
+                Our team supports members through professional guidance,
+                motivation, and personalized training advice.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <article class="team-card h-100">
+                    <img
+                        src="{% static 'images/staff1.jpg' %}"
+                        alt="StefGym strength trainer"
+                        class="team-image"
+                    >
+
+                    <div class="team-card-body">
+                        <h3 class="h4">Stefanos Paiste</h3>
+                        <p class="team-role">Strength Coach</p>
+
+                        <p>
+                            Alex helps members improve strength, lifting
+                            technique, and confidence.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="team-card h-100">
+                    <img
+                        src="{% static 'images/staff2.jpg' %}"
+                        alt="StefGym fitness trainer"
+                        class="team-image"
+                    >
+
+                    <div class="team-card-body">
+                        <h3 class="h4">Stefanos Sejalvo Paiste</h3>
+                        <p class="team-role">Fitness Trainer</p>
+
+                        <p>
+                            Maria creates balanced programs focused on fitness,
+                            mobility, and endurance.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="team-card h-100">
+                    <img
+                        src="{% static 'images/staff3.jpg' %}"
+                        alt="StefGym recovery specialist"
+                        class="team-image"
+                    >
+
+                    <div class="team-card-body">
+                        <h3 class="h4">Sejalvo Paiste Stefanos</h3>
+                        <p class="team-role">Recovery Specialist</p>
+
+                        <p>
+                            Daniel supports members with mobility, recovery,
+                            stretching, and injury-prevention techniques.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="gallery-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="about-eyebrow text-uppercase">Inside StefGym</p>
+            <h2 class="fw-bold">Our Training Environment</h2>
+        </div>
+
+        <div
+            id="trainerCarousel"
+            class="carousel slide about-carousel"
+            data-bs-ride="carousel"
+        >
+            <div class="carousel-indicators">
+                <button
+                    type="button"
+                    data-bs-target="#trainerCarousel"
+                    data-bs-slide-to="0"
+                    class="active"
+                    aria-current="true"
+                    aria-label="First image"
+                ></button>
+
+                <button
+                    type="button"
+                    data-bs-target="#trainerCarousel"
+                    data-bs-slide-to="1"
+                    aria-label="Second image"
+                ></button>
+
+                <button
+                    type="button"
+                    data-bs-target="#trainerCarousel"
+                    data-bs-slide-to="2"
+                    aria-label="Third image"
+                ></button>
+            </div>
+
+            <div class="carousel-inner rounded-4">
+
+                <div class="carousel-item active">
+                    <img
+                        src="{% static 'images/carousel1.jpg' %}"
+                        class="d-block w-100 carousel-image"
+                        alt="Stef"
+                    >
+                </div>
+
+                <div class="carousel-item">
+                    <img
+                        src="{% static 'images/carousel2.jpg' %}"
+                        class="d-block w-100 carousel-image"
+                        alt="Stefgym"
+                    >
+                </div>
+
+                <div class="carousel-item">
+                    <img
+                        src="{% static 'images/carousel3.jpg' %}"
+                        class="d-block w-100 carousel-image"
+                        alt="Stef"
+                    >
+                </div>
+
+            </div>
+
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#trainerCarousel"
+                data-bs-slide="prev"
+            >
+                <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="visually-hidden">Previous</span>
+            </button>
+
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#trainerCarousel"
+                data-bs-slide="next"
+            >
+                <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

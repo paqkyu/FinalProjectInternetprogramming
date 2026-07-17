@@ -91,8 +91,42 @@
                             Contact
                         </a>
                     </li>
-
-
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+                            <i class="bi bi-person-circle me-1"></i>
+                            {{ user.username }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form
+                            method="post"
+                            action="{% url 'accounts:logout' %}"
+                            class="d-inline">
+                            {% csrf_token %}
+                            <button
+                                type="submit"
+                                class="btn btn-outline-light rounded-pill px-3 ms-lg-2">
+                            Logout
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a
+                            class="btn btn-outline-light rounded-pill px-3 ms-lg-2"
+                            href="{% url 'accounts:login' %}">
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="btn btn-outline-light px-3 ms-lg-2"
+                            href="{% url 'accounts:register' %}">
+                            Sign up
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

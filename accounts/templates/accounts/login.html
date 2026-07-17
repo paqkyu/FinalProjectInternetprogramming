@@ -1,0 +1,91 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+StefGym - Login
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-section py-5">
+    <div class="container">
+        <div class="auth-card auth-card-small">
+
+            <div class="text-center mb-4">
+                <span class="auth-icon">
+                    <i class="bi bi-person-circle"></i>
+                </span>
+
+                <h1 class="h2 fw-bold">Welcome Back</h1>
+
+                <p>
+                    Log in to access your StefGym dashboard.
+                </p>
+            </div>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label
+                        for="{{ form.username.id_for_label }}"
+                        class="form-label"
+                    >
+                        Username
+                    </label>
+
+                    {{ form.username }}
+
+                    {% for error in form.username.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        for="{{ form.password.id_for_label }}"
+                        class="form-label"
+                    >
+                        Password
+                    </label>
+
+                    {{ form.password }}
+
+                    {% for error in form.password.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn auth-button w-100"
+                >
+                    Login
+                </button>
+            </form>
+
+            <p class="text-center mt-4 mb-0">
+                Do not have an account?
+
+                <a href="{% url 'accounts:register' %}">
+                    Sign Up
+                </a>
+            </p>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "core",
     "accounts",
+    "bookings",
+    "catalog",
+    "workouts",
 ]
 
 MIDDLEWARE = [
@@ -129,3 +132,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL="accounts:dashboard"
 LOGOUT_REDIRECT_URL="core:home"
+
+import os
+WORKOUTX_API_KEY = os.environ.get(
+    "WORKOUTX_API_KEY",
+    "",
+)

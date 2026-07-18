@@ -23,3 +23,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+    @property
+    def can_book_trainer(self):
+        return(self.current_membership is not None and self.current_membership.can_book_trainer)

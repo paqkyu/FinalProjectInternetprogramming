@@ -1,7 +1,8 @@
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
+from bookings.models import Booking
 
 from .forms import LoginForm, RegistrationForm
 from .models import Profile
@@ -65,5 +66,36 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
+    if request.user.is_superuser:
+        return redirect("admin:index")
+    
+    if is_staff_member(request.user):
+        return redirect("accounts:staff_dashboard")
+    
+    profile,_=Profile.objects.get_or_create(
+        user=request.user
+    )
+    return render(request, "accounts/dashboard.html", {"profile": profile},)
 
-    return render(request, "accounts/dashboard.html")
+def is_staff_member(user):
+    return(
+        user.is_authenticated
+        and (
+            user.is_superuser or user.groups.filter(name="Staff").exists())
+    )
+@login_required
+@user_passes_test(is_staff_member)
+def staff_dashboard(request):
+    bookings=Booking.objects.filter(
+        trainer__user=request.user
+    ).select_related(
+        "member",
+        "member__profile",
+        "trainer",
+        "trainer__user",
+    )
+    return render(
+        request,
+        "accounts/staff_dashboard.html",
+        {"bookings":bookings},
+    )

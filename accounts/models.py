@@ -15,10 +15,12 @@ class Profile(models.Model):
         related_name="profile",
     )
 
-    membership_type = models.CharField(
-        max_length=20,
-        choices=MEMBERSHIP_CHOICES,
-        default="none",
+    current_membership=models.ForeignKey(
+        "catalog.MembershipPlan",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="members",
     )
 
     def __str__(self):
@@ -26,4 +28,4 @@ class Profile(models.Model):
     
     @property
     def can_book_trainer(self):
-        return(self.current_membership is not None and self.current_membership.can_book_trainer)
+        return(self.current_membership is not None and self.current_membership.is_active and self.current_membership.can_book_trainer)

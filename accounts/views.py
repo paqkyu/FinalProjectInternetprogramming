@@ -4,7 +4,8 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from bookings.models import Booking
 
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, AccountUpdateForm
+from django.contrib import messages
 from .models import Profile
 
 #create your views here
@@ -76,6 +77,27 @@ def dashboard(request):
         user=request.user
     )
     return render(request, "accounts/dashboard.html", {"profile": profile},)
+@login_required
+def edit_profile(request):
+    if request.method=="POST":
+        form=AccountUpdateForm(
+            request.POST,
+            instance=request.user,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Your account details were updated successfully.",
+            )
+            return redirect("accounts:dashboard")
+    else:
+        form = AccountUpdateForm(
+            instance=request.user,
+        )
+    return render(
+        request,"accounts/profile_edit.html", {"form": form},
+    )
 
 def is_staff_member(user):
     return(

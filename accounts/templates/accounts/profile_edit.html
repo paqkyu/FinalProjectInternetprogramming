@@ -1,0 +1,112 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+Edit Profile - StefGym
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/accounts.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+
+            <div class="card bg-dark text-light border-secondary">
+                <div class="card-body p-4">
+
+                    <h1 class="h3 mb-4">
+                        Edit Account Details
+                    </h1>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label
+                                for="{{ form.first_name.id_for_label }}"
+                                class="form-label"
+                            >
+                                First name
+                            </label>
+
+                            {{ form.first_name }}
+
+                            {% for error in form.first_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label
+                                for="{{ form.last_name.id_for_label }}"
+                                class="form-label"
+                            >
+                                Last name
+                            </label>
+
+                            {{ form.last_name }}
+
+                            {% for error in form.last_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                for="{{ form.email.id_for_label }}"
+                                class="form-label"
+                            >
+                                Email
+                            </label>
+
+                            {{ form.email }}
+
+                            {% for error in form.email.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-flex gap-2">
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save Changes
+                            </button>
+
+                            <a
+                                href="{% url 'accounts:dashboard' %}"
+                                class="btn btn-outline-light"
+                            >
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

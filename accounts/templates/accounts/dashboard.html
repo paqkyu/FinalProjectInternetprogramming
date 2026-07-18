@@ -40,8 +40,9 @@ StefGym - Dashboard
                 <article class="dashboard-card h-100">
                     <i class="bi bi-person-fill"></i>
                     <h2 class="h4">Profile</h2>
-                    <p>{{ user.get_full_name }}</p>
-                    <p>{{ user.email }}</p>
+                    <p>{{ user.get_full_name|default:user.username }}</p>
+                    <p>{{ user.email|default:"No email added" }}</p>
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-light mt-2"> Edit Account Details</a>
                 </article>
             </div>
 
@@ -58,6 +59,25 @@ StefGym - Dashboard
                     <i class="bi bi-star-fill"></i>
                     <h2 class="h4">Ratings</h2>
                     <p>Your product ratings will appear here.</p>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-person-badge-fill"></i>
+
+                    <h2 class="h4">Personal Training</h2>
+                    {% if profile.can_book_trainer %}
+                        <p>Your plan includes trainer booking</p>
+                    {% else %}
+                        <p>Premium or Elite membership is required.</p>
+                    {% endif %}
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'bookings:trainer_list' %}"
+                        class="btn btn-outline-light">
+                    View Trainers</a>
+                    <a href="{% url 'bookings:my_bookings' %}" class="btn btn-outline-light">My Bookings</a>
+                    </div>
                 </article>
             </div>
 

@@ -1,0 +1,58 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+Trainers - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="container py-5">
+    <div class="mb-5">
+        <p class="text-uppercase text-info">Personal Training</p>
+        <h1>Meet Our Trainers</h1>
+        <p>
+            View trainer specialties and book a session with
+            Premium or Elite membership.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        {% for trainer in trainers %}
+            <div class="col-md-6 col-lg-4">
+                <article class="card bg-dark text-light border-secondary h-100">
+                    <div class="card-body">
+                        <i class="bi bi-person-badge fs-1"></i>
+
+                        <h2 class="h4 mt-3">
+                            {{ trainer.user.get_full_name|default:trainer.user.username }}
+                        </h2>
+
+                        <p>
+                            <strong>Specialty:</strong>
+                            {{ trainer.specialty }}
+                        </p>
+
+                        <p>
+                            {{ trainer.biography|truncatewords:25 }}
+                        </p>
+
+                        <a
+                            href="{% url 'bookings:trainer_detail' trainer.id %}"
+                            class="btn btn-outline-light"
+                        >
+                            View Trainer
+                        </a>
+                    </div>
+                </article>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No trainers are currently available.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

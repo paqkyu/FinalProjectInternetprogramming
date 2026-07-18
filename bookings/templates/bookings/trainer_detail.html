@@ -1,0 +1,104 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+{{ trainer }} - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="container py-5">
+    <div class="row g-4">
+
+        <div class="col-lg-6">
+            <article class="card bg-dark text-light border-secondary h-100">
+                <div class="card-body p-4">
+                    <i class="bi bi-person-badge fs-1"></i>
+
+                    <h1 class="h2 mt-3">
+                        {{ trainer.user.get_full_name|default:trainer.user.username }}
+                    </h1>
+
+                    <p>
+                        <strong>Specialty:</strong>
+                        {{ trainer.specialty }}
+                    </p>
+
+                    <p>
+                        {{ trainer.biography|default:"Biography coming soon." }}
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-lg-6">
+            <article class="card bg-dark text-light border-secondary">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Book a Session</h2>
+
+                    {% if profile.can_book_trainer %}
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.starts_at.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Date and time
+                                </label>
+
+                                {{ form.starts_at }}
+
+                                {% for error in form.starts_at.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.notes.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Notes
+                                </label>
+
+                                {{ form.notes }}
+
+                                {% for error in form.notes.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Request Booking
+                            </button>
+                        </form>
+
+                    {% else %}
+                        <div class="alert alert-warning">
+                            Trainer booking requires a Premium or Elite
+                            membership. Upgrade your plan to book this trainer.
+                        </div>
+
+                        <a
+                            href="{% url 'accounts:dashboard' %}"
+                            class="btn btn-outline-light"
+                        >
+                            View Membership
+                        </a>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

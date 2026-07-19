@@ -214,6 +214,18 @@ def checkout(request):
                     str(error),
                 )
 
+            except Exception:
+                logger.exception(
+                    "Order creation failed before Stripe Checkout."
+                )
+
+                messages.error(
+                    request,
+                    "The order could not be created. Please try again.",
+                )
+
+                return redirect("cart:checkout")
+
             else:
                 try:
                     stripe.api_key = getattr(

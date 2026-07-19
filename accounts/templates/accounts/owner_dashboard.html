@@ -1,0 +1,266 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+Owner Dashboard - StefGym
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/accounts.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-section py-5">
+    <div class="container">
+
+        <div class="dashboard-heading mb-5">
+            <p class="dashboard-eyebrow text-uppercase">
+                Owner Area
+            </p>
+
+            <h1 class="fw-bold">
+                StefGym Management
+            </h1>
+
+            <p>
+                View inventory, employees, bookings,
+                membership plans, and account activity.
+            </p>
+        </div>
+
+        <div class="row g-4 mb-5">
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-box-seam"></i>
+                    <h2 class="h5">Active Products</h2>
+                    <p class="display-6 fw-bold">
+                        {{ total_products }}
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h2 class="h5">Low Stock</h2>
+                    <p class="display-6 fw-bold">
+                        {{ low_stock_count }}
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-people"></i>
+                    <h2 class="h5">Members</h2>
+                    <p class="display-6 fw-bold">
+                        {{ total_members }}
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-calendar-check"></i>
+                    <h2 class="h5">Pending Bookings</h2>
+                    <p class="display-6 fw-bold">
+                        {{ pending_bookings }}
+                    </p>
+                </article>
+            </div>
+
+        </div>
+
+        <section class="mb-5">
+            <div
+                class="d-flex flex-wrap
+                       justify-content-between
+                       align-items-center gap-3 mb-3"
+            >
+                <h2 class="h3 mb-0">
+                    Owner Tools
+                </h2>
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:catalog_product_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Manage Inventory
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:catalog_product_add' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Add Product
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:auth_user_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Manage Employees
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:bookings_booking_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        All Bookings
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:catalog_membershipplan_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Membership Plans
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:index' %}"
+                        class="btn btn-outline-secondary w-100 py-3"
+                    >
+                        Advanced Admin
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="h3 mb-3">
+                Low-Stock Inventory
+            </h2>
+
+            <div class="table-responsive">
+                <table
+                    class="table table-dark
+                           table-striped align-middle"
+                >
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Remaining Stock</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for product in low_stock_products %}
+                            <tr>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.category.name }}</td>
+                                <td>${{ product.price }}</td>
+                                <td>
+                                    {% if product.stock_quantity == 0 %}
+                                        <span class="text-danger">
+                                            Out of stock
+                                        </span>
+                                    {% else %}
+                                        {{ product.stock_quantity }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a
+                                        href="{% url 'admin:catalog_product_change' product.id %}"
+                                        class="btn btn-sm btn-outline-light"
+                                    >
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td
+                                    colspan="5"
+                                    class="text-center py-4"
+                                >
+                                    No products currently have low stock.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="h3 mb-3">
+                Recent Trainer Bookings
+            </h2>
+
+            <div class="table-responsive">
+                <table
+                    class="table table-dark
+                           table-striped align-middle"
+                >
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Trainer</th>
+                            <th>Session</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for booking in recent_bookings %}
+                            <tr>
+                                <td>
+                                    {{ booking.member.get_full_name|default:booking.member.username }}
+                                </td>
+
+                                <td>
+                                    {{ booking.trainer.user.get_full_name|default:booking.trainer.user.username }}
+                                </td>
+
+                                <td>
+                                    {{ booking.starts_at|date:"M d, Y - H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ booking.get_status_display }}
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td
+                                    colspan="4"
+                                    class="text-center py-4"
+                                >
+                                    No bookings have been created.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+</section>
+
+{% endblock %}

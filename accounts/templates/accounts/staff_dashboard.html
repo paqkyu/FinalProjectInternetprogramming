@@ -1,55 +1,214 @@
 {% extends "navbarfooter.html" %}
 
 {% block title %}
-StefGym - Staff Dashboard
+Staff Dashboard - StefGym
 {% endblock %}
 
 {% block content %}
 
 <section class="container py-5">
-    <h1 class="mb-4">Staff Dashboard</h1>
 
-    <h2 class="h4 mb-3">My Client Bookings</h2>
+    <div class="mb-5">
+        <p class="text-uppercase text-info">
+            Staff Area
+        </p>
 
-    <div class="table-responsive">
-        <table class="table table-dark table-striped align-middle">
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Email</th>
-                    <th>Date and Time</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
+        <h1>
+            Trainer Dashboard
+        </h1>
 
-            <tbody>
-                {% for booking in bookings %}
-                    <tr>
-                        <td>
-                            {{ booking.member.get_full_name|default:booking.member.username }}
-                        </td>
-
-                        <td>{{ booking.member.email }}</td>
-
-                        <td>
-                            {{ booking.starts_at|date:"M d, Y - H:i" }}
-                        </td>
-
-                        <td>{{ booking.get_status_display }}</td>
-
-                        <td>{{ booking.notes|default:"No notes" }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">
-                            You currently have no bookings.
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <p>
+            Manage your assigned clients and bookings.
+        </p>
     </div>
+
+    <section class="mb-5">
+        <h2 class="h3 mb-4">
+            Active Bookings
+        </h2>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Membership</th>
+                        <th>Date and time</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for booking in active_bookings %}
+                        <tr>
+                            <td>
+                                {{ booking.member.get_full_name|default:booking.member.username }}
+                            </td>
+
+                            <td>
+                                {{ booking.member.email|default:"No email" }}
+                            </td>
+
+                            <td>
+                                {% if booking.member.profile.current_membership %}
+                                    {{ booking.member.profile.current_membership.name }}
+                                {% else %}
+                                    No Membership
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ booking.starts_at|date:"M d, Y - H:i" }}
+                            </td>
+
+                            <td>
+                                {{ booking.notes|default:"No notes" }}
+                            </td>
+
+                            <td>
+                                {{ booking.get_status_display }}
+                            </td>
+
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    {% if booking.status == "pending" %}
+                                        <form
+                                            method="post"
+                                            action="{% url 'accounts:update_booking_status' booking.id %}"
+                                        >
+                                            {% csrf_token %}
+
+                                            <input
+                                                type="hidden"
+                                                name="status"
+                                                value="confirmed"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-success"
+                                            >
+                                                Confirm
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+                                    {% if booking.status == "confirmed" %}
+                                        <form
+                                            method="post"
+                                            action="{% url 'accounts:update_booking_status' booking.id %}"
+                                        >
+                                            {% csrf_token %}
+
+                                            <input
+                                                type="hidden"
+                                                name="status"
+                                                value="completed"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-primary"
+                                            >
+                                                Complete
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'accounts:update_booking_status' booking.id %}"
+                                    >
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="status"
+                                            value="cancelled"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td
+                                colspan="7"
+                                class="text-center py-4"
+                            >
+                                You currently have no active bookings.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="h3 mb-4">
+            Booking History
+        </h2>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Date and time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for booking in booking_history %}
+                        <tr>
+                            <td>
+                                {{ booking.member.get_full_name|default:booking.member.username }}
+                            </td>
+
+                            <td>
+                                {{ booking.starts_at|date:"M d, Y - H:i" }}
+                            </td>
+
+                            <td>
+                                {{ booking.get_status_display }}
+                            </td>
+
+                            <td>
+                                {{ booking.notes|default:"No notes" }}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td
+                                colspan="4"
+                                class="text-center py-4"
+                            >
+                                No completed or cancelled bookings yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 </section>
 
 {% endblock %}

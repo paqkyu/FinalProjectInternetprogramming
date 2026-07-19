@@ -1,0 +1,173 @@
+{% extends "navbarfooter.html" %}
+{% block title %}
+Shopping Cart - StefGym
+{% endblock %}
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="mb-4">
+            <p class="text-uppercase text-secondary mb-1">
+                StefGym Store
+            </p>
+
+            <h1 class="fw-bold">
+                Shopping Cart
+            </h1>
+        </div>
+
+        {% if cart|length > 0 %}
+
+            <div class="table-responsive mb-4">
+                <table class="table table-dark table-striped align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th style="min-width: 230px;">
+                                Quantity
+                            </th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in cart %}
+                            <tr>
+                                <td>
+                                    <a
+                                        href="{% url 'catalog:product_detail' item.product.id %}"
+                                        class="text-light text-decoration-none"
+                                    >
+                                        {{ item.product.name }}
+                                    </a>
+
+                                    <p class="text-secondary small mb-0">
+                                        {{ item.product.category.name }}
+
+                                        {% if item.product.subcategory %}
+                                            · {{ item.product.subcategory.name }}
+                                        {% endif %}
+                                    </p>
+                                </td>
+
+                                <td>
+                                    ${{ item.price }}
+                                </td>
+
+                                <td>
+                                    <form
+                                        method="post"
+                                        action="{% url 'cart:cart_add' item.product.id %}"
+                                        class="d-flex align-items-center gap-2"
+                                    >
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="number"
+                                            name="quantity"
+                                            value="{{ item.quantity }}"
+                                            min="1"
+                                            max="{{ item.product.stock_quantity }}"
+                                            class="form-control"
+                                            style="max-width: 90px;"
+                                            aria-label="Quantity for {{ item.product.name }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="override"
+                                            value="on"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-light"
+                                        >
+                                            Update
+                                        </button>
+                                    </form>
+
+                                    <small class="text-secondary">
+                                        Maximum: {{ item.product.stock_quantity }}
+                                    </small>
+                                </td>
+
+                                <td>
+                                    ${{ item.total_price }}
+                                </td>
+
+                                <td>
+                                    <form
+                                        method="post"
+                                        action="{% url 'cart:cart_remove' item.product.id %}"
+                                    >
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                        >
+                                            Remove
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">
+                                Cart Total
+                            </th>
+
+                            <th>
+                                ${{ cart.get_total_price }}
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3">
+                <a
+                    href="{% url 'catalog:product_list' %}"
+                    class="btn btn-outline-light"
+                >
+                    Continue Shopping
+                </a>
+                
+                <a
+                    href="{% url 'cart:checkout' %}"
+                    class="btn btn-light">
+                    Proceed to checkout
+                </a>
+                </button>
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-secondary">
+                Your shopping cart is currently empty.
+            </div>
+
+            <a
+                href="{% url 'catalog:product_list' %}"
+                class="btn btn-light"
+            >
+                Browse Products
+            </a>
+
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

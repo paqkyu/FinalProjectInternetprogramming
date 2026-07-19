@@ -1,0 +1,104 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+Order Confirmation - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="card bg-dark text-light border-success">
+            <div class="card-body p-4 p-lg-5">
+
+                {% if order.paid %}
+                    <p class="text-success text-uppercase">
+                        Payment Successful
+                    </p>
+
+                    <h1 class="fw-bold">
+                        Thank you for your order
+                    </h1>
+
+                    <p>
+                        Your order number is
+                        <strong>#{{ order.id }}</strong>.
+                    </p>
+                {% else %}
+                    <p class="text-warning text-uppercase">
+                        Payment Processing
+                    </p>
+
+                    <h1 class="fw-bold">
+                        Your payment is being verified
+                    </h1>
+
+                    <p>
+                        Refresh this page in a moment.
+                        Your order number is
+                        <strong>#{{ order.id }}</strong>.
+                    </p>
+                {% endif %}
+
+                <p>
+                    Order date:
+                    {{ order.created_at|date:"M d, Y - H:i" }}
+                </p>
+
+                <hr class="border-secondary">
+
+                <h2 class="h4 mb-3">
+                    Purchased Items
+                </h2>
+
+                {% for item in order.items.all %}
+                    <div
+                        class="d-flex justify-content-between border-bottom border-secondary py-3">
+                        <div>
+                            <strong>
+                                {{ item.product_name }}
+                            </strong>
+
+                            <p class="text-secondary mb-0">
+                                Quantity: {{ item.quantity }}
+                            </p>
+                        </div>
+
+                        <span>
+                            ${{ item.get_cost }}
+                        </span>
+                    </div>
+                {% endfor %}
+
+                <div
+                    class="d-flex justify-content-between fs-5 fw-bold pt-4">
+                    <span>Order Total</span>
+                    <span>${{ order.get_total_price }}</span>
+                </div>
+
+                <div class="mt-4">
+                    {% if order.paid %}
+                        <a
+                            href="{% url 'catalog:product_list' %}"
+                            class="btn btn-light"
+                        >
+                            Continue Shopping
+                        </a>
+                    {% else %}
+                        <a
+                            href=""
+                            class="btn btn-outline-warning"
+                        >
+                            Refresh Payment Status
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

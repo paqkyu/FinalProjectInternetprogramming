@@ -1,13 +1,25 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from bookings.models import Booking
+from bookings.models import Booking, TrainerProfile
+from catalog.models import MembershipPlan, Product
 
 from .forms import LoginForm, RegistrationForm, AccountUpdateForm
 from django.contrib import messages
 from .models import Profile
-
+User=get_user_model()
+def is_staff_member(user):
+    return(
+        user.is_authenticated
+        and (
+            user.is_superuser or user.groups.filter(name="Staff").exists())
+    )
+def is_owner(user):
+    return(
+        user.is_authenticated
+        and user.is_superuser
+    )
 #create your views here
 def register(request):
     """Display and process the user registration form."""
@@ -68,7 +80,7 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
-        return redirect("admin:index")
+        return redirect("accounts:owner_dashboard")
     
     if is_staff_member(request.user):
         return redirect("accounts:staff_dashboard")
@@ -77,6 +89,76 @@ def dashboard(request):
         user=request.user
     )
     return render(request, "accounts/dashboard.html", {"profile": profile},)
+@login_required
+@user_passes_test(is_owner)
+def owner_dashboard(request):
+    low_stock_threshold = 5
+
+    low_stock_products = Product.objects.filter(
+        is_active=True,
+        stock_quantity__lte=low_stock_threshold,
+    ).order_by(
+        "stock_quantity",
+        "name",
+    )[:10]
+
+    recent_bookings = Booking.objects.select_related(
+        "member",
+        "trainer",
+        "trainer__user",
+    ).order_by(
+        "-created_at",
+    )[:8]
+
+    total_members = Profile.objects.exclude(
+        user__is_superuser=True,
+    ).exclude(
+        user__groups__name="Staff",
+    ).distinct().count()
+
+    total_staff = User.objects.filter(
+        groups__name="Staff",
+    ).distinct().count()
+
+    context = {
+        "total_products": Product.objects.filter(
+            is_active=True,
+        ).count(),
+
+        "low_stock_count": Product.objects.filter(
+            is_active=True,
+            stock_quantity__lte=low_stock_threshold,
+        ).count(),
+
+        "out_of_stock_count": Product.objects.filter(
+            is_active=True,
+            stock_quantity=0,
+        ).count(),
+
+        "total_members": total_members,
+        "total_staff": total_staff,
+
+        "active_trainers": TrainerProfile.objects.filter(
+            is_available=True,
+        ).count(),
+
+        "pending_bookings": Booking.objects.filter(
+            status=Booking.Status.PENDING,
+        ).count(),
+
+        "active_membership_plans": MembershipPlan.objects.filter(
+            is_active=True,
+        ).count(),
+
+        "low_stock_products": low_stock_products,
+        "recent_bookings": recent_bookings,
+    }
+
+    return render(
+        request,
+        "accounts/owner_dashboard.html",
+        context,
+    )
 @login_required
 def edit_profile(request):
     if request.method=="POST":
@@ -99,25 +181,76 @@ def edit_profile(request):
         request,"accounts/profile_edit.html", {"form": form},
     )
 
-def is_staff_member(user):
-    return(
-        user.is_authenticated
-        and (
-            user.is_superuser or user.groups.filter(name="Staff").exists())
-    )
 @login_required
 @user_passes_test(is_staff_member)
 def staff_dashboard(request):
-    bookings=Booking.objects.filter(
+    base_bookings=Booking.objects.filter(
         trainer__user=request.user
     ).select_related(
         "member",
         "member__profile",
+        "member__profile__current_membership",
         "trainer",
         "trainer__user",
     )
+    active_bookings=base_bookings.exclude(
+        status__in=[Booking.Status.COMPLETED, Booking.Status.CANCELLED,
+        ],
+    ).order_by(
+        "starts_at",
+    )
+    booking_history = base_bookings.filter(
+        status__in=[
+            Booking.Status.COMPLETED,
+            Booking.Status.CANCELLED,
+        ],
+    ).order_by(
+        "-starts_at",
+    )
+
     return render(
         request,
         "accounts/staff_dashboard.html",
-        {"bookings":bookings},
+        {"active_bookings":active_bookings, "booking_history":booking_history},
     )
+@login_required
+@user_passes_test(is_staff_member)
+@require_POST
+def update_booking_status(request, booking_id):
+    booking=get_object_or_404(
+        Booking,
+        pk=booking_id,
+
+        trainer__user=request.user,
+    )
+    new_status=request.POST.get("status","").strip().lower()
+
+    allowed_transitions ={
+        Booking.Status.PENDING: {
+            Booking.Status.CONFIRMED,
+            Booking.Status.CANCELLED,
+        },
+        Booking.Status.CONFIRMED: {
+            Booking.Status.COMPLETED,
+            Booking.Status.CANCELLED,
+        },
+        Booking.Status.COMPLETED: set(),
+        Booking.Status.CANCELLED: set(),
+    }
+    permitted_statuses=allowed_transitions.get(
+        booking.status,
+        set(),
+    )
+    if new_status not in permitted_statuses:
+        messages.error(
+            request,
+            "That booking status change is not allowed.",
+        )
+        return redirect("accounts:staff_dashboard")
+    booking.status=new_status
+    booking.save(update_fields=["status"])
+    messages.success(
+        request,
+        "The booking status was updated successfully.",
+    )
+    return redirect("accounts:staff_dashboard")

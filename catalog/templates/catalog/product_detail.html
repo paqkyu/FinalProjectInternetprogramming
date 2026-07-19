@@ -1,0 +1,139 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+{{ product.name }} - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <a
+            href="{% url 'catalog:product_list' %}"
+            class="btn btn-outline-secondary mb-4"
+        >
+            Back to Products
+        </a>
+
+        <div class="row g-5 align-items-start">
+
+            <div class="col-lg-6">
+
+                {% if product.image_url %}
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.name }}"
+                        class="img-fluid rounded border border-secondary w-100"
+                    >
+                {% else %}
+                    <div
+                        class="border border-secondary rounded d-flex align-items-center justify-content-center"
+                        style="min-height: 350px;"
+                    >
+                        <p class="text-secondary mb-0">
+                            No product image available
+                        </p>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <p class="text-secondary mb-2">
+                    {{ product.category.name }}
+
+                    {% if product.subcategory %}
+                        · {{ product.subcategory.name }}
+                    {% endif %}
+                </p>
+
+                <h1 class="fw-bold">
+                    {{ product.name }}
+                </h1>
+
+                {% if product.brand %}
+                    <p>
+                        Brand: {{ product.brand }}
+                    </p>
+                {% endif %}
+
+                <p>
+                    Fitness goal:
+                    {{ product.get_fitness_goal_display }}
+                </p>
+
+                <p class="fs-2 fw-bold">
+                    ${{ product.price }}
+                </p>
+
+                {% if product.in_stock %}
+                    <p class="text-success">
+                        {{ product.stock_quantity }} currently in stock
+                    </p>
+                {% else %}
+                    <p class="text-danger">
+                        This product is currently out of stock.
+                    </p>
+                {% endif %}
+
+                <hr class="border-secondary">
+
+                <h2 class="h4">
+                    Description
+                </h2>
+
+                <p>
+                    {{ product.description|linebreaks }}
+                </p>
+
+                {% if product.in_stock %}
+                    <form
+                        method="post"
+                        action="{% url 'cart:cart_add' product.id %}"
+                        class="mt-4"
+                    >
+                        {% csrf_token %}
+                        <div class="row g-3 align-items-end">
+                            <div class="col-sm-4">
+                                <label
+                                    for="{{ cart_form.quantity.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Quantity
+                            </label>
+                            {{ cart_form.quantity}}
+                            {{ cart_form.override}}
+
+                            {% for error in cart_form.quantity.errors %}
+                                <p class="text-danger small mt-2 mb-0">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                            </div>
+                            <div class="col-sm-8">
+                                <button
+                                    type="submit"
+                                    class="btn btn-light"
+                                >
+                                    Add to Cart
+                            </button>
+                            </div>
+                        </div>
+                </form>
+            {% else %}
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    disabled
+                >
+                    Out of Stock
+                </button>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

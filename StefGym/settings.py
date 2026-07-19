@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     "bookings",
     "catalog",
     "workouts",
+    "cart",
 ]
 
 MIDDLEWARE = [
@@ -133,8 +136,17 @@ LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL="accounts:dashboard"
 LOGOUT_REDIRECT_URL="core:home"
 
-import os
 WORKOUTX_API_KEY = os.environ.get(
     "WORKOUTX_API_KEY",
     "",
 )
+CART_SESSION_ID="cart"
+STRIPE_SECRET_KEY=os.environ.get(
+    "STRIPE_SECRET_KEY",
+    "",
+)
+STRIPE_WEBHOOK_SECRET=os.environ.get(
+    "STRIPE_WEBHOOK_SECRET",
+    ""
+)
+STRIPE_CURRENCY="usd"

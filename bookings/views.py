@@ -87,6 +87,8 @@ def trainer_detail(request, trainer_id):
 def my_bookings(request):
     bookings = Booking.objects.filter(
         member=request.user,
+    ).exclude(
+        status=Booking.Status.CANCELLED
     ).select_related(
         "trainer",
         "trainer__user",

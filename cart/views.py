@@ -17,7 +17,11 @@ from decimal import Decimal
 from accounts.models import Profile
 import logging
 logger = logging.getLogger(__name__)
-stripe.api_key=settings.STRIPE_SECRET_KEY
+stripe.api_key=getattr(
+    settings,
+    "STRIPE_SECRET_KEY",
+    "",
+).strip()
 
 # Create your views here.
 def cart_detail(request):
@@ -29,8 +33,6 @@ def cart_detail(request):
         {"cart": cart},
     )
 
-
-@require_POST
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -213,47 +215,71 @@ def checkout(request):
                 )
 
             else:
-                line_items = []
-
-                for item in order.items.all():
-                    line_items.append({
-                        "price_data": {
-                            "currency": settings.STRIPE_CURRENCY,
-                            "product_data": {
-                                "name": item.product_name,
-                            },
-                            "unit_amount": int(
-                                item.price * Decimal("100")
-                            ),
-                        },
-                        "quantity": item.quantity,
-                    })
-
-                success_url = request.build_absolute_uri(
-                    reverse(
-                        "cart:order_confirmation",
-                        args=[order.id],
-                    )
-                )
-
-                success_url += (
-                    "?session_id={CHECKOUT_SESSION_ID}"
-                )
-
-                cancel_url = request.build_absolute_uri(
-                    reverse("cart:checkout")
-                )
-
                 try:
+                    stripe.api_key = getattr(
+                        settings,
+                        "STRIPE_SECRET_KEY",
+                        "",
+                    ).strip()
+
+                    if not stripe.api_key:
+                        raise RuntimeError(
+                            "STRIPE_SECRET_KEY is not configured."
+                        )
+
+                    stripe_currency = getattr(
+                        settings,
+                        "STRIPE_CURRENCY",
+                        "eur",
+                    ).lower()
+
+                    line_items = []
+
+                    for item in order.items.all():
+                        line_items.append(
+                            {
+                                "price_data": {
+                                    "currency": stripe_currency,
+                                    "product_data": {
+                                        "name": item.product_name,
+                                    },
+                                    "unit_amount": int(
+                                        item.price
+                                        * Decimal("100")
+                                    ),
+                                },
+                                "quantity": item.quantity,
+                            }
+                        )
+
+                    success_url = request.build_absolute_uri(
+                        reverse(
+                            "cart:order_confirmation",
+                            args=[order.id],
+                        )
+                    )
+
+                    success_url += (
+                        "?session_id={CHECKOUT_SESSION_ID}"
+                    )
+
+                    cancel_url = request.build_absolute_uri(
+                        reverse("cart:checkout")
+                    )
+
                     checkout_session = (
                         stripe.checkout.Session.create(
                             mode="payment",
                             payment_method_types=["card"],
                             customer_email=order.email,
-                            client_reference_id=str(order.id),
+                            client_reference_id=str(
+                                order.id
+                            ),
                             metadata={
                                 "order_id": str(order.id),
-                                "user_id": str(request.user.id),
+                                "user_id": str(
+                                    request.user.id
+                                ),
                             },
                             line_items=line_items,
                             success_url=success_url,
@@ -261,23 +287,10 @@ def checkout(request):
                         )
                     )
 
-                except Exception:
-                    logger.exception(
-                        "Stripe Checkout session creation failed for order %s.",
-                        order.id
-                    )
-                    order.delete()
-                    messages.error(
-                        request,
-                        "Stripe checkout could not be started. Please try again.",
-                    )
-                    return redirect("cart:checkout")
-
-
-                else:
                     order.stripe_checkout_session_id = (
                         checkout_session.id
                     )
+
                     order.save(
                         update_fields=[
                             "stripe_checkout_session_id",
@@ -287,6 +300,27 @@ def checkout(request):
                     return redirect(
                         checkout_session.url
                     )
+
+                except Exception:
+                    logger.exception(
+                        (
+                            "Checkout failed while creating "
+                            "Stripe session for order %s."
+                        ),
+                        order.id,
+                    )
+
+                    order.delete()
+
+                    messages.error(
+                        request,
+                        (
+                            "Stripe checkout could not be "
+                            "started. Please try again."
+                        ),
+                    )
+
+                    return redirect("cart:checkout")
 
     else:
         form = CheckoutForm(

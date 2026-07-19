@@ -1,0 +1,21 @@
+.stef-navbar {
+    background: #0b1014;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stef-navbar .navbar-brand {
+    color: #2ec1ac;
+}
+
+.stef-navbar .navbar-brand:hover {
+    color: #8fd5c9;
+}
+
+.stef-navbar .nav-link {
+    color: #cfd8dc;
+}
+
+.stef-navbar .nav-link:hover,
+.stef-navbar .nav-link.active {
+    color: #2ec1ac;
+}

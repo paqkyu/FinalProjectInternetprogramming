@@ -1,0 +1,192 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+Contact - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="row g-5">
+
+            <div class="col-lg-5">
+                <p class="text-info text-uppercase fw-bold mb-2">
+                    Contact StefGym
+                </p>
+
+                <h1 class="fw-bold">
+                    Get in Touch
+                </h1>
+
+                <p class="text-secondary">
+                    Contact us about memberships, products,
+                    trainer bookings, or any other questions.
+                </p>
+
+                <div class="mt-4">
+                    <article
+                        class="card bg-dark text-light
+                               border-secondary mb-3"
+                    >
+                        <div class="card-body">
+                            <h2 class="h5">
+                                Email
+                            </h2>
+
+                            <p class="mb-0">
+                                support@stefgym.com
+                            </p>
+                        </div>
+                    </article>
+
+                    <article
+                        class="card bg-dark text-light
+                               border-secondary mb-3"
+                    >
+                        <div class="card-body">
+                            <h2 class="h5">
+                                Phone
+                            </h2>
+
+                            <p class="mb-0">
+                                +30 69969696969
+                            </p>
+                        </div>
+                    </article>
+
+                    <article
+                        class="card bg-dark text-light
+                               border-secondary"
+                    >
+                        <div class="card-body">
+                            <h2 class="h5">
+                                Opening Hours
+                            </h2>
+
+                            <p class="mb-1">
+                                Monday–Friday: 06:00–01:00
+                            </p>
+
+                            <p class="mb-0">
+                                Saturday–Sunday: 08:00–01:00
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div
+                    class="card bg-dark text-light
+                           border-secondary"
+                >
+                    <div class="card-body p-4 p-lg-5">
+
+                        <h2 class="h3 mb-4">
+                            Send a Message
+                        </h2>
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label
+                                        for="{{ form.name.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        Name
+                                    </label>
+
+                                    {{ form.name }}
+
+                                    {% for error in form.name.errors %}
+                                        <p class="text-danger small mt-1 mb-0">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label
+                                        for="{{ form.email.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        Email
+                                    </label>
+
+                                    {{ form.email }}
+
+                                    {% for error in form.email.errors %}
+                                        <p class="text-danger small mt-1 mb-0">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-12">
+                                    <label
+                                        for="{{ form.subject.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        Subject
+                                    </label>
+
+                                    {{ form.subject }}
+
+                                    {% for error in form.subject.errors %}
+                                        <p class="text-danger small mt-1 mb-0">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-12">
+                                    <label
+                                        for="{{ form.message.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        Message
+                                    </label>
+
+                                    {{ form.message }}
+
+                                    {% for error in form.message.errors %}
+                                        <p class="text-danger small mt-1 mb-0">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-12">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-light"
+                                    >
+                                        Send Message
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

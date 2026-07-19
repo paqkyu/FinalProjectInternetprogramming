@@ -1,0 +1,75 @@
+<article
+    id="review-{{ review.id }}"
+    class="card bg-dark text-light border-secondary mb-3"
+    data-rating="{{ review.rating }}"
+>
+    <div class="card-body">
+
+        <div
+            class="d-flex flex-wrap justify-content-between
+                   align-items-start gap-2 mb-3"
+        >
+            <div>
+                <h3 class="h5 mb-1">
+                    {{ review.user.username }}
+                </h3>
+
+                <span class="text-warning">
+                    {% for number in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </span>
+
+                <span class="text-secondary">
+                    {{ review.rating }}/5
+                </span>
+            </div>
+
+            <small class="text-secondary">
+                Updated {{ review.updated_at|date:"d M Y H:i" }}
+            </small>
+        </div>
+
+        <p class="review-comment mb-3">
+            {{ review.comment|linebreaksbr }}
+        </p>
+
+        <div class="review-comment-data d-none">
+            {{ review.comment }}
+        </div>
+
+        {% if user == review.user %}
+            <div class="d-flex gap-2">
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-light
+                           review-edit-button"
+                >
+                    Edit
+                </button>
+
+                <form
+                    method="post"
+                    action="{% url 'catalog:delete_review' review.id %}"
+                    class="delete-review-form"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-danger"
+                    >
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+        {% endif %}
+
+    </div>
+</article>

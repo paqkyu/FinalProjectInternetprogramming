@@ -149,4 +149,6 @@ STRIPE_WEBHOOK_SECRET=os.environ.get(
     "STRIPE_WEBHOOK_SECRET",
     ""
 )
-STRIPE_CURRENCY="usd"
+STRIPE_CURRENCY="eur"
+
+WORKOUTX_API_KEY=os.getenv("WORKOUTX_API_KEY", "",).strip()

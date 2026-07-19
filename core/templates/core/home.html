@@ -54,70 +54,82 @@ StefGym - Home
             <p class="eyebrow text-uppercase">StefGym Store</p>
             <h2 class="fw-bold">Featured Products</h2>
 
-            <p>
-                A preview of products that will later come from the Django
-                catalogue database.
-            </p>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
 
-            <div class="col-md-4">
-                <article class="home-product-card h-100 p-4">
-                    <i class="bi bi-bag product-icon"></i>
+            {% for product in featured_products %}
+        <div class="col-md-6 col-xl-4">
+            <article class="card bg-dark text-light border-secondary h-100">
 
-                    <h3 class="h4">Resistance Bands</h3>
+                {% if product.image_url %}
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.name }}"
+                        class="card-img-top"
+                        style="height: 220px; object-fit: cover;"
+                    >
+                {% endif %}
 
-                    <p>
-                        A portable resistance-band set for strength, mobility,
-                        and recovery exercises.
+                <div class="card-body d-flex flex-column p-4">
+
+                    <p class="text-secondary small mb-2">
+                        {{ product.category.name }}
+
+                        {% if product.subcategory %}
+                            · {{ product.subcategory.name }}
+                        {% endif %}
                     </p>
 
-                    <p class="product-price">€24.99</p>
+                    <h3 class="h4">
+                        {{ product.name }}
+                    </h3>
 
-                    <a href="#" class="btn btn-primary">
-                        View Product
-                    </a>
-                </article>
-            </div>
-
-            <div class="col-md-4">
-                <article class="home-product-card h-100 p-4">
-                    <i class="bi bi-bag product-icon"></i>
-
-                    <h3 class="h4">Training Gloves</h3>
-
-                    <p>
-                        Comfortable gym gloves designed to improve grip during
-                        weight training.
+                    <p class="text-secondary">
+                        {{ product.description|truncatewords:18 }}
                     </p>
 
-                    <p class="product-price">€19.99</p>
+                    {% if product.brand %}
+                        <p class="small">
+                            Brand: {{ product.brand }}
+                        </p>
+                    {% endif %}
 
-                    <a href="#" class="btn btn-primary">
-                        View Product
-                    </a>
-                </article>
-            </div>
-
-            <div class="col-md-4">
-                <article class="home-product-card h-100 p-4">
-                    <i class="bi bi-bag product-icon"></i>
-
-                    <h3 class="h4">Foam Roller</h3>
-
-                    <p>
-                        A recovery tool designed to reduce muscle tension after
-                        exercise.
+                    <p class="fs-5 fw-bold text-info mt-auto">
+                        €{{ product.price }}
                     </p>
 
-                    <p class="product-price">€29.99</p>
+                    {% if product.in_stock %}
+                        <p class="text-success small">
+                            {{ product.stock_quantity }} in stock
+                        </p>
+                    {% else %}
+                        <p class="text-danger small">
+                            Out of stock
+                        </p>
+                    {% endif %}
 
-                    <a href="#" class="btn btn-primary">
+                    <a
+                        href="{% url 'catalog:product_detail' product.id %}"
+                        class="btn btn-primary align-self-start"
+                    >
                         View Product
                     </a>
-                </article>
+
+                </div>
+            </article>
+        </div>
+
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-secondary text-center">
+                No featured products are currently available.
             </div>
+        </div>
+    {% endfor %}
+
+</div>
+
 
         </div>
     </div>
@@ -125,73 +137,101 @@ StefGym - Home
 
 
 
-<section id="memberships" class="membership-section py-5">
+<section id="memberships" class="py-5">
     <div class="container">
 
         <div class="text-center mb-5">
-            <p class="eyebrow text-uppercase">Memberships</p>
-            <h2 class="fw-bold">Choose Your Plan</h2>
+            <p class="text-uppercase text-info fw-bold">
+                Memberships
+            </p>
+
+            <h2 class="fw-bold">
+                Choose Your Plan
+            </h2>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
 
-            <div class="col-md-4">
-                <article class="membership-card h-100">
-                    <h3 class="h4">Basic</h3>
+            {% for product in membership_products %}
+                <div class="col-md-6 col-xl-4">
+                    <article
+                        class="card bg-dark text-light
+                               border-secondary text-center h-100"
+                    >
+                        <div class="card-body d-flex flex-column p-4">
 
-                    <p>
-                        Access to gym equipment during standard opening hours.
-                    </p>
+                            {% if product.membership_plan.tier_order == 2 %}
+                                <div class="mb-3">
+                                    <span class="badge bg-success">
+                                        Popular
+                                    </span>
+                                </div>
+                            {% endif %}
 
-                    <p class="membership-price">
-                        €25 <span>/ month</span>
-                    </p>
+                            <h3 class="h4">
+                                {{ product.membership_plan.name }}
+                            </h3>
 
-                    <a href="#" class="btn btn-outline-light rounded-pill">
-                        Select Plan
-                    </a>
-                </article>
-            </div>
+                            <div class="mb-3">
+                                {{ product.membership_plan.description|linebreaks }}
+                            </div>
 
-            <div class="col-md-4">
-                <article class="membership-card h-100 featured-membership">
-                    <span class="badge bg-success mb-3">Popular</span>
+                            <p class="mb-4">
+                                <strong class="fs-4 text-info">
+                                    €{{ product.price }}
+                                </strong>
+                                / month
+                            </p>
 
-                    <h3 class="h4">Premium</h3>
+                            {% if user.is_authenticated and user.profile.current_membership %}
 
-                    <p>
-                        Full gym access, fitness classes, and one monthly
-                        trainer consultation.
-                    </p>
+                                {% if product.membership_plan.tier_order <= user.profile.current_membership.tier_order %}
 
-                    <p class="membership-price">
-                        €45 <span>/ month</span>
-                    </p>
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary mt-auto"
+                                        disabled
+                                    >
+                                        {% if product.membership_plan == user.profile.current_membership %}
+                                            Current Plan
+                                        {% else %}
+                                            Lower Plan
+                                        {% endif %}
+                                    </button>
 
-                    <a href="#" class="btn btn-primary rounded-pill">
-                        Select Plan
-                    </a>
-                </article>
-            </div>
+                                {% else %}
 
-            <div class="col-md-4">
-                <article class="membership-card h-100">
-                    <h3 class="h4">Elite</h3>
+                                    <a
+                                        href="{% url 'catalog:product_detail' product.id %}"
+                                        class="btn btn-primary mt-auto"
+                                    >
+                                        View {{ product.membership_plan.name }}
+                                    </a>
 
-                    <p>
-                        Premium access with personal training and recovery
-                        services.
-                    </p>
+                                {% endif %}
 
-                    <p class="membership-price">
-                        €75 <span>/ month</span>
-                    </p>
+                            {% else %}
 
-                    <a href="#" class="btn btn-outline-light rounded-pill">
-                        Select Plan
-                    </a>
-                </article>
-            </div>
+                                <a
+                                    href="{% url 'catalog:product_detail' product.id %}"
+                                    class="{% if product.membership_plan.tier_order == 2 %}btn btn-primary mt-auto{% else %}btn btn-outline-light mt-auto{% endif %}"
+                                >
+                                    View Plan
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+                    </article>
+                </div>
+
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-secondary text-center">
+                        No membership plans are currently available.
+                    </div>
+                </div>
+            {% endfor %}
 
         </div>
     </div>

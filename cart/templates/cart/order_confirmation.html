@@ -66,7 +66,7 @@ Order Confirmation - StefGym
                         </div>
 
                         <span>
-                            ${{ item.get_cost }}
+                            €{{ item.get_cost }}
                         </span>
                     </div>
                 {% endfor %}
@@ -74,7 +74,7 @@ Order Confirmation - StefGym
                 <div
                     class="d-flex justify-content-between fs-5 fw-bold pt-4">
                     <span>Order Total</span>
-                    <span>${{ order.get_total_price }}</span>
+                    <span>€{{ order.get_total_price }}</span>
                 </div>
 
                 <div class="mt-4">

@@ -89,7 +89,7 @@ Checkout - StefGym
                                 </div>
 
                                 <span>
-                                    ${{ item.total_price }}
+                                    €{{ item.total_price }}
                                 </span>
                             </div>
                         {% endfor %}
@@ -97,7 +97,7 @@ Checkout - StefGym
                         <div
                             class="d-flex justify-content-between fs-5 fw-bold pt-4">
                             <span>Total</span>
-                            <span>${{ cart.get_total_price }}</span>
+                            <span>€{{ cart.get_total_price }}</span>
                         </div>
 
                     </div>

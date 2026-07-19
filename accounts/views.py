@@ -3,11 +3,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from bookings.models import Booking, TrainerProfile
-from catalog.models import MembershipPlan, Product
-
+from catalog.models import MembershipPlan, Product, Review
+from django.db.models import Count
 from .forms import LoginForm, RegistrationForm, AccountUpdateForm
 from django.contrib import messages
 from .models import Profile
+from catalog.forms import ProductForm
 User=get_user_model()
 def is_staff_member(user):
     return(
@@ -94,44 +95,89 @@ def dashboard(request):
 def owner_dashboard(request):
     low_stock_threshold = 5
 
-    low_stock_products = Product.objects.filter(
+    physical_products = Product.objects.filter(
         is_active=True,
-        stock_quantity__lte=low_stock_threshold,
-    ).order_by(
-        "stock_quantity",
-        "name",
-    )[:10]
+        membership_plan__isnull=True,
+    )
 
-    recent_bookings = Booking.objects.select_related(
-        "member",
-        "trainer",
-        "trainer__user",
-    ).order_by(
-        "-created_at",
-    )[:8]
+    low_stock_products = (
+        physical_products.filter(
+            stock_quantity__lte=low_stock_threshold,
+        )
+        .select_related(
+            "category",
+            "subcategory",
+        )
+        .order_by(
+            "stock_quantity",
+            "name",
+        )[:10]
+    )
 
-    total_members = Profile.objects.exclude(
-        user__is_superuser=True,
-    ).exclude(
-        user__groups__name="Staff",
-    ).distinct().count()
+    recent_bookings = (
+        Booking.objects.select_related(
+            "member",
+            "trainer",
+            "trainer__user",
+        )
+        .order_by("-created_at")[:8]
+    )
 
-    total_staff = User.objects.filter(
-        groups__name="Staff",
-    ).distinct().count()
+    recent_reviews = (
+        Review.objects.select_related(
+            "product",
+            "user",
+        )
+        .order_by("-updated_at")[:6]
+    )
+
+    total_members = (
+        Profile.objects.exclude(
+            user__is_superuser=True,
+        )
+        .exclude(
+            user__groups__name="Staff",
+        )
+        .distinct()
+        .count()
+    )
+
+    total_staff = (
+        User.objects.filter(
+            groups__name="Staff",
+        )
+        .distinct()
+        .count()
+    )
+
+    active_memberships = Profile.objects.filter(
+        current_membership__isnull=False,
+    ).count()
+
+    membership_distribution = (
+        Profile.objects.filter(
+            current_membership__isnull=False,
+        )
+        .values(
+            "current_membership__name",
+            "current_membership__tier_order",
+        )
+        .annotate(
+            total=Count("id"),
+        )
+        .order_by(
+            "current_membership__tier_order",
+        )
+    )
 
     context = {
-        "total_products": Product.objects.filter(
-            is_active=True,
-        ).count(),
+        "total_products": physical_products.count(),
 
-        "low_stock_count": Product.objects.filter(
-            is_active=True,
+        "low_stock_count": physical_products.filter(
             stock_quantity__lte=low_stock_threshold,
         ).count(),
 
-        "out_of_stock_count": Product.objects.filter(
-            is_active=True,
+        "out_of_stock_count": physical_products.filter(
             stock_quantity=0,
         ).count(),
 
@@ -150,14 +196,111 @@ def owner_dashboard(request):
             is_active=True,
         ).count(),
 
+        "active_memberships": active_memberships,
+
+        "total_reviews": Review.objects.count(),
+
         "low_stock_products": low_stock_products,
         "recent_bookings": recent_bookings,
+        "recent_reviews": recent_reviews,
+        "membership_distribution": membership_distribution,
     }
 
     return render(
         request,
         "accounts/owner_dashboard.html",
         context,
+    )
+@login_required
+@user_passes_test(is_owner)
+def owner_products(request):
+    products = (
+        Product.objects.filter(
+            membership_plan__isnull=True,
+        )
+        .select_related(
+            "category",
+            "subcategory",
+        )
+        .order_by("name")
+    )
+
+    return render(
+        request,
+        "accounts/owner_products.html",
+        {
+            "products": products,
+        },
+    )
+
+
+@login_required
+@user_passes_test(is_owner)
+def owner_product_add(request):
+    if request.method == "POST":
+        form = ProductForm(request.POST)
+
+        if form.is_valid():
+            product = form.save()
+
+            messages.success(
+                request,
+                f"{product.name} was added successfully.",
+            )
+
+            return redirect("accounts:owner_products")
+    else:
+        form = ProductForm()
+
+    return render(
+        request,
+        "accounts/owner_product_form.html",
+        {
+            "form": form,
+            "page_title": "Add Product",
+            "submit_text": "Add Product",
+        },
+    )
+
+
+@login_required
+@user_passes_test(is_owner)
+def owner_product_edit(request, product_id):
+    product = get_object_or_404(
+        Product,
+        pk=product_id,
+        membership_plan__isnull=True,
+    )
+
+    if request.method == "POST":
+        form = ProductForm(
+            request.POST,
+            instance=product,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                f"{product.name} was updated successfully.",
+            )
+
+            return redirect("accounts:owner_products")
+    else:
+        form = ProductForm(
+            instance=product,
+        )
+
+    return render(
+        request,
+        "accounts/owner_product_form.html",
+        {
+            "form": form,
+            "product": product,
+            "page_title": f"Edit {product.name}",
+            "submit_text": "Save Changes",
+        },
     )
 @login_required
 def edit_profile(request):

@@ -1,9 +1,14 @@
 {% extends "navbarfooter.html" %}
-
+{% load static %}
 {% block title %}
 {{ product.name }} - StefGym
 {% endblock %}
-
+{% block extra_js %}
+<script
+    src="{% static 'javascript/product_reviews.js' %}?v=3"
+    defer
+></script>
+{% endblock %}
 {% block content %}
 
 <section class="py-5">
@@ -65,7 +70,7 @@
                 </p>
 
                 <p class="fs-2 fw-bold">
-                    ${{ product.price }}
+                    €{{ product.price }}
                 </p>
 
                 {% if product.in_stock %}
@@ -135,5 +140,158 @@
         </div>
     </div>
 </section>
+<section class="pb-5">
+    <div class="container">
 
+        <div
+            class="d-flex flex-wrap justify-content-between
+                   align-items-center gap-3 mb-4"
+        >
+            <div>
+                <p class="text-info text-uppercase fw-bold mb-1">
+                    Customer Feedback
+                </p>
+
+                <h2 class="fw-bold mb-0">
+                    Product Reviews
+                </h2>
+            </div>
+
+            <div class="text-end">
+                <p class="fs-4 fw-bold mb-0">
+                    <span id="average-rating">
+                        {{ product.average_rating|floatformat:1 }}
+                    </span>/5
+                </p>
+
+                <p class="text-secondary mb-0">
+                    <span id="review-count">
+                        {{ product.review_count }}
+                    </span>
+                    review{{ product.review_count|pluralize }}
+                </p>
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+            <form
+                id="review-form"
+                method="post"
+                action="{% url 'catalog:submit_review' product.id %}"
+                class="card bg-dark text-light border-secondary
+                       p-4 mb-5"
+            >
+                {% csrf_token %}
+
+                <h3 class="h4">
+                    Leave or Update Your Review
+                </h3>
+
+                <p class="text-secondary">
+                    Each customer can submit one review per product.
+                    Submitting again updates your existing review.
+                </p>
+
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+                        <label
+                            for="review-rating"
+                            class="form-label"
+                        >
+                            Rating
+                        </label>
+
+                        <select
+                            id="review-rating"
+                            name="rating"
+                            class="form-select"
+                            required
+                        >
+                            <option value="">
+                                Select a rating
+                            </option>
+
+                            <option value="1">
+                                1 - Poor
+                            </option>
+
+                            <option value="2">
+                                2 - Fair
+                            </option>
+
+                            <option value="3">
+                                3 - Good
+                            </option>
+
+                            <option value="4">
+                                4 - Very Good
+                            </option>
+
+                            <option value="5">
+                                5 - Excellent
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label
+                            for="review-comment"
+                            class="form-label"
+                        >
+                            Review
+                        </label>
+
+                        <textarea
+                            id="review-comment"
+                            name="comment"
+                            class="form-control"
+                            rows="4"
+                            maxlength="2000"
+                            required
+                            placeholder="Share your experience."
+                        ></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <button
+                            id="review-submit-button"
+                            type="submit"
+                            class="btn btn-light"
+                        >
+                            Submit Review
+                        </button>
+                    </div>
+
+                </div>
+
+                <div
+                    id="review-message"
+                    class="mt-3"
+                    aria-live="polite"
+                ></div>
+            </form>
+        {% else %}
+            <div class="alert alert-secondary mb-5">
+                Log in to leave a product review.
+            </div>
+        {% endif %}
+
+        <div id="reviews-list">
+
+            {% for review in product.reviews.all %}
+                {% include "catalog/partials/review_card.html" %}
+            {% empty %}
+                <p
+                    id="no-reviews-message"
+                    class="text-secondary"
+                >
+                    This product does not have any reviews yet.
+                </p>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
 {% endblock %}

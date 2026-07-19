@@ -1,0 +1,232 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+Exercise Library - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="mb-4">
+            <p class="text-uppercase text-info fw-bold mb-1">
+                Workout Library
+            </p>
+
+            <h1 class="fw-bold">
+                Exercises
+            </h1>
+
+            <p class="text-secondary">
+                Search exercises and filter them by body part,
+                equipment, and difficulty.
+            </p>
+        </div>
+
+        <form
+            method="get"
+            class="card bg-dark text-light border-secondary p-4 mb-5"
+        >
+            <div class="row g-3">
+
+                <div class="col-md-6 col-xl-3">
+                    <label
+                        for="exercise-search"
+                        class="form-label"
+                    >
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        id="exercise-search"
+                        name="q"
+                        value="{{ search_query }}"
+                        class="form-control"
+                        placeholder="Exercise or muscle"
+                    >
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <label
+                        for="body-part"
+                        class="form-label"
+                    >
+                        Body Part
+                    </label>
+
+                    <select
+                        id="body-part"
+                        name="body_part"
+                        class="form-select"
+                    >
+                        <option value="">
+                            All body parts
+                        </option>
+
+                        {% for body_part in body_parts %}
+                            <option
+                                value="{{ body_part }}"
+                                {% if selected_body_part == body_part %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ body_part|title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <label
+                        for="equipment"
+                        class="form-label"
+                    >
+                        Equipment
+                    </label>
+
+                    <select
+                        id="equipment"
+                        name="equipment"
+                        class="form-select"
+                    >
+                        <option value="">
+                            All equipment
+                        </option>
+
+                        {% for equipment in equipment_options %}
+                            <option
+                                value="{{ equipment }}"
+                                {% if selected_equipment == equipment %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ equipment|title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <label
+                        for="difficulty"
+                        class="form-label"
+                    >
+                        Difficulty
+                    </label>
+
+                    <select
+                        id="difficulty"
+                        name="difficulty"
+                        class="form-select"
+                    >
+                        <option value="">
+                            All difficulties
+                        </option>
+
+                        {% for difficulty in difficulty_options %}
+                            <option
+                                value="{{ difficulty }}"
+                                {% if selected_difficulty == difficulty %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ difficulty|title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 d-flex flex-wrap gap-2">
+                    <button
+                        type="submit"
+                        class="btn btn-light"
+                    >
+                        Apply Filters
+                    </button>
+
+                    <a
+                        href="{% url 'workouts:exercise_list' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Clear Filters
+                    </a>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="row g-4">
+
+            {% for exercise in exercises %}
+                <div class="col-md-6 col-xl-4">
+                    <article
+                        class="card bg-dark text-light
+                               border-secondary h-100"
+                    >
+
+                        {% if exercise.gif_url %}
+                            <img
+                                src="{% url 'workouts:exercise_gif' exercise.id %}"
+                                alt="{{ exercise.name }}"
+                                class="card-img-top bg-light"
+                                style="height: 250px; object-fit: contain;"
+                                loading="lazy"
+                            >
+                        {% endif %}
+
+                        <div class="card-body d-flex flex-column">
+
+                            <p class="text-info small text-uppercase mb-2">
+                                {{ exercise.body_part|default:"General" }}
+                            </p>
+
+                            <h2 class="h4">
+                                {{ exercise.name|title }}
+                            </h2>
+
+                            <p class="text-secondary">
+                                Target:
+                                {{ exercise.target|default:"Not specified"|title }}
+                            </p>
+
+                            {% if exercise.equipment %}
+                                <p>
+                                    Equipment:
+                                    {{ exercise.equipment|title }}
+                                </p>
+                            {% endif %}
+
+                            {% if exercise.difficulty %}
+                                <p>
+                                    Difficulty:
+                                    {{ exercise.difficulty|title }}
+                                </p>
+                            {% endif %}
+
+                            <a
+                                href="{% url 'workouts:exercise_detail' exercise.id %}"
+                                class="btn btn-outline-light mt-auto"
+                            >
+                                View Exercise
+                            </a>
+
+                        </div>
+                    </article>
+                </div>
+
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-secondary">
+                        No exercises matched your filters.
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

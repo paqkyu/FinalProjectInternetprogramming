@@ -1,0 +1,164 @@
+{% extends "navbarfooter.html" %}
+{% load static %}
+
+{% block title %}
+Manage Inventory - StefGym
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/accounts.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-section py-5">
+    <div class="container">
+
+        <div
+            class="d-flex flex-wrap justify-content-between
+                   align-items-center gap-3 mb-4"
+        >
+            <div>
+                <p class="dashboard-eyebrow text-uppercase mb-1">
+                    Owner Area
+                </p>
+
+                <h1 class="fw-bold mb-1">
+                    Manage Inventory
+                </h1>
+
+                <p class="text-secondary mb-0">
+                    View and update StefGym store products.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a
+                    href="{% url 'accounts:owner_dashboard' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Back to Dashboard
+                </a>
+
+                <a
+                    href="{% url 'accounts:owner_product_add' %}"
+                    class="btn btn-light"
+                >
+                    Add Product
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table
+                class="table table-dark table-striped
+                       table-hover align-middle"
+            >
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                <strong>{{ product.name }}</strong>
+
+                                {% if product.brand %}
+                                    <br>
+                                    <small class="text-secondary">
+                                        {{ product.brand }}
+                                    </small>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ product.category.name }}
+
+                                {% if product.subcategory %}
+                                    <br>
+                                    <small class="text-secondary">
+                                        {{ product.subcategory.name }}
+                                    </small>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                €{{ product.price }}
+                            </td>
+
+                            <td>
+                                {% if product.stock_quantity == 0 %}
+                                    <span class="badge text-bg-danger">
+                                        Out of stock
+                                    </span>
+                                {% elif product.stock_quantity <= 5 %}
+                                    <span class="badge text-bg-warning">
+                                        {{ product.stock_quantity }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge text-bg-success">
+                                        {{ product.stock_quantity }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if product.is_active %}
+                                    <span class="badge text-bg-success">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a
+                                        href="{% url 'catalog:product_detail' product.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{% url 'accounts:owner_product_edit' product.id %}"
+                                        class="btn btn-sm btn-outline-light"
+                                    >
+                                        Edit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td
+                                colspan="6"
+                                class="text-center py-5"
+                            >
+                                No store products have been created.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

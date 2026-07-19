@@ -158,3 +158,64 @@ class Product(models.Model):
             self.is_membership_product
         or self.stock_quantity > 0
         )
+    @property
+    def average_rating(self):
+        result = self.reviews.aggregate(
+            average=models.Avg("rating"),
+        )
+
+        return result["average"] or 0
+
+    @property
+    def review_count(self):
+        return self.reviews.count()
+class Review(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="reviews",
+    )
+
+    user = models.ForeignKey(
+        "auth.User",
+        on_delete=models.CASCADE,
+        related_name="product_reviews",
+    )
+
+    rating = models.PositiveSmallIntegerField()
+
+    comment = models.TextField(
+        max_length=2000,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["-updated_at"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product", "user"],
+                name="one_review_per_user_per_product",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    rating__gte=1,
+                    rating__lte=5,
+                ),
+                name="review_rating_between_1_and_5",
+            ),
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.user.username} - "
+            f"{self.product.name} - "
+            f"{self.rating}/5"
+        )

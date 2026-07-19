@@ -27,18 +27,18 @@ Owner Dashboard - StefGym
             </h1>
 
             <p>
-                View inventory, employees, bookings,
-                membership plans, and account activity.
+                View inventory, employees, bookings,  memberships, and customer activity.
             </p>
         </div>
-
         <div class="row g-4 mb-5">
 
             <div class="col-md-6 col-xl-3">
                 <article class="dashboard-card h-100">
                     <i class="bi bi-box-seam"></i>
-                    <h2 class="h5">Active Products</h2>
-                    <p class="display-6 fw-bold">
+                    <h2 class="h5">
+                        Store Products
+                    </h2>
+                    <p class="display-6 fw-bold mb-0">
                         {{ total_products }}
                     </p>
                 </article>
@@ -47,9 +47,15 @@ Owner Dashboard - StefGym
             <div class="col-md-6 col-xl-3">
                 <article class="dashboard-card h-100">
                     <i class="bi bi-exclamation-triangle"></i>
-                    <h2 class="h5">Low Stock</h2>
-                    <p class="display-6 fw-bold">
+                    <h2 class="h5">
+                        Low Stock
+                    </h2>
+                    <p class="display-6 fw-bold mb-0">
                         {{ low_stock_count }}
+                    </p>
+
+                    <p class="text-secondary mb-0">
+                        {{ out_of_stock_count }} out of stock
                     </p>
                 </article>
             </div>
@@ -57,9 +63,38 @@ Owner Dashboard - StefGym
             <div class="col-md-6 col-xl-3">
                 <article class="dashboard-card h-100">
                     <i class="bi bi-people"></i>
-                    <h2 class="h5">Members</h2>
-                    <p class="display-6 fw-bold">
+                    <h2 class="h5">
+                        Customers
+                    </h2>
+                    <p class="display-6 fw-bold mb-0">
                         {{ total_members }}
+                    </p>
+                </article>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-person-badge"></i>
+
+                    <h2 class="h5">
+                        Staff
+                    </h2>
+
+                    <p class="display-6 fw-bold mb-0">
+                        {{ total_staff }}
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-person-check"></i>
+
+                    <h2 class="h5">
+                        Available Trainers
+                    </h2>
+
+                    <p class="display-6 fw-bold mb-0">
+                        {{ active_trainers }}
                     </p>
                 </article>
             </div>
@@ -67,15 +102,54 @@ Owner Dashboard - StefGym
             <div class="col-md-6 col-xl-3">
                 <article class="dashboard-card h-100">
                     <i class="bi bi-calendar-check"></i>
-                    <h2 class="h5">Pending Bookings</h2>
-                    <p class="display-6 fw-bold">
+
+                    <h2 class="h5">
+                        Pending Bookings
+                    </h2>
+
+                    <p class="display-6 fw-bold mb-0">
                         {{ pending_bookings }}
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-credit-card"></i>
+
+                    <h2 class="h5">
+                        Active Memberships
+                    </h2>
+
+                    <p class="display-6 fw-bold mb-0">
+                        {{ active_memberships }}
+                    </p>
+
+                    <p class="text-secondary mb-0">
+                        {{ active_membership_plans }}
+                        plan{{ active_membership_plans|pluralize }}
+                        available
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="dashboard-card h-100">
+                    <i class="bi bi-star"></i>
+
+                    <h2 class="h5">
+                        Product Reviews
+                    </h2>
+
+                    <p class="display-6 fw-bold mb-0">
+                        {{ total_reviews }}
                     </p>
                 </article>
             </div>
 
         </div>
 
+        <!-- Owner management links -->
         <section class="mb-5">
             <div
                 class="d-flex flex-wrap
@@ -91,7 +165,7 @@ Owner Dashboard - StefGym
 
                 <div class="col-md-6 col-xl-3">
                     <a
-                        href="{% url 'admin:catalog_product_changelist' %}"
+                        href="{% url 'accounts:owner_products' %}"
                         class="btn btn-outline-light w-100 py-3"
                     >
                         Manage Inventory
@@ -100,7 +174,7 @@ Owner Dashboard - StefGym
 
                 <div class="col-md-6 col-xl-3">
                     <a
-                        href="{% url 'admin:catalog_product_add' %}"
+                        href="{% url 'accounts:owner_product_add' %}"
                         class="btn btn-outline-light w-100 py-3"
                     >
                         Add Product
@@ -112,7 +186,7 @@ Owner Dashboard - StefGym
                         href="{% url 'admin:auth_user_changelist' %}"
                         class="btn btn-outline-light w-100 py-3"
                     >
-                        Manage Employees
+                        Manage Users
                     </a>
                 </div>
 
@@ -136,6 +210,24 @@ Owner Dashboard - StefGym
 
                 <div class="col-md-6 col-xl-3">
                     <a
+                        href="{% url 'admin:catalog_review_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Manage Reviews
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
+                        href="{% url 'admin:bookings_trainerprofile_changelist' %}"
+                        class="btn btn-outline-light w-100 py-3"
+                    >
+                        Manage Trainers
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <a
                         href="{% url 'admin:index' %}"
                         class="btn btn-outline-secondary w-100 py-3"
                     >
@@ -146,10 +238,64 @@ Owner Dashboard - StefGym
             </div>
         </section>
 
+        <!-- Membership distribution -->
         <section class="mb-5">
             <h2 class="h3 mb-3">
-                Low-Stock Inventory
+                Membership Distribution
             </h2>
+
+            <div class="row g-3">
+
+                {% for membership in membership_distribution %}
+                    <div class="col-md-6 col-xl-4">
+                        <article class="dashboard-card h-100">
+
+                            <h3 class="h5">
+                                {{ membership.current_membership__name }}
+                            </h3>
+
+                            <p class="display-6 fw-bold mb-0">
+                                {{ membership.total }}
+                            </p>
+
+                            <p class="text-secondary mb-0">
+                                active
+                                member{{ membership.total|pluralize }}
+                            </p>
+
+                        </article>
+                    </div>
+
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-secondary">
+                            No customers currently have an active
+                            membership.
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- Low-stock inventory -->
+        <section class="mb-5">
+            <div
+                class="d-flex flex-wrap
+                       justify-content-between
+                       align-items-center gap-3 mb-3"
+            >
+                <h2 class="h3 mb-0">
+                    Low-Stock Inventory
+                </h2>
+
+                <a
+                    href="{% url 'accounts:owner_products' %}"
+                    class="btn btn-sm btn-outline-light"
+                >
+                    Manage All Products
+                </a>
+            </div>
 
             <div class="table-responsive">
                 <table
@@ -169,18 +315,31 @@ Owner Dashboard - StefGym
                     <tbody>
                         {% for product in low_stock_products %}
                             <tr>
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.category.name }}</td>
-                                <td>${{ product.price }}</td>
+                                <td>
+                                    {{ product.name }}
+                                </td>
+
+                                <td>
+                                    {{ product.category.name }}
+                                </td>
+
+                                <td>
+                                    €{{ product.price }}
+                                </td>
+
                                 <td>
                                     {% if product.stock_quantity == 0 %}
                                         <span class="text-danger">
                                             Out of stock
                                         </span>
                                     {% else %}
-                                        {{ product.stock_quantity }}
+                                        <span class="text-warning">
+                                            {{ product.stock_quantity }}
+                                            remaining
+                                        </span>
                                     {% endif %}
                                 </td>
+
                                 <td>
                                     <a
                                         href="{% url 'admin:catalog_product_change' product.id %}"
@@ -197,7 +356,8 @@ Owner Dashboard - StefGym
                                     colspan="5"
                                     class="text-center py-4"
                                 >
-                                    No products currently have low stock.
+                                    No physical products currently
+                                    have low stock.
                                 </td>
                             </tr>
                         {% endfor %}
@@ -206,10 +366,24 @@ Owner Dashboard - StefGym
             </div>
         </section>
 
-        <section>
-            <h2 class="h3 mb-3">
-                Recent Trainer Bookings
-            </h2>
+        <!-- Recent trainer bookings -->
+        <section class="mb-5">
+            <div
+                class="d-flex flex-wrap
+                       justify-content-between
+                       align-items-center gap-3 mb-3"
+            >
+                <h2 class="h3 mb-0">
+                    Recent Trainer Bookings
+                </h2>
+
+                <a
+                    href="{% url 'admin:bookings_booking_changelist' %}"
+                    class="btn btn-sm btn-outline-light"
+                >
+                    Manage All Bookings
+                </a>
+            </div>
 
             <div class="table-responsive">
                 <table
@@ -222,6 +396,7 @@ Owner Dashboard - StefGym
                             <th>Trainer</th>
                             <th>Session</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -241,14 +416,39 @@ Owner Dashboard - StefGym
                                 </td>
 
                                 <td>
-                                    {{ booking.get_status_display }}
+                                    {% if booking.status == "pending" %}
+                                        <span class="badge text-bg-warning">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                    {% elif booking.status == "confirmed" %}
+                                        <span class="badge text-bg-info">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                    {% elif booking.status == "completed" %}
+                                        <span class="badge text-bg-success">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge text-bg-secondary">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a
+                                        href="{% url 'admin:bookings_booking_change' booking.id %}"
+                                        class="btn btn-sm btn-outline-light"
+                                    >
+                                        View
+                                    </a>
                                 </td>
                             </tr>
 
                         {% empty %}
                             <tr>
                                 <td
-                                    colspan="4"
+                                    colspan="5"
                                     class="text-center py-4"
                                 >
                                     No bookings have been created.
@@ -257,6 +457,86 @@ Owner Dashboard - StefGym
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Recent product reviews -->
+        <section>
+            <div
+                class="d-flex flex-wrap
+                       justify-content-between
+                       align-items-center gap-3 mb-3"
+            >
+                <h2 class="h3 mb-0">
+                    Recent Product Reviews
+                </h2>
+
+                <a
+                    href="{% url 'admin:catalog_review_changelist' %}"
+                    class="btn btn-sm btn-outline-light"
+                >
+                    Manage All Reviews
+                </a>
+            </div>
+
+            <div class="row g-3">
+
+                {% for review in recent_reviews %}
+                    <div class="col-md-6">
+                        <article class="dashboard-card h-100">
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       align-items-start gap-3"
+                            >
+                                <div>
+                                    <h3 class="h5 mb-1">
+                                        {{ review.product.name }}
+                                    </h3>
+
+                                    <p class="text-secondary mb-2">
+                                        By {{ review.user.username }}
+                                    </p>
+                                </div>
+
+                                <span class="text-warning">
+                                    {{ review.rating }}/5 ★
+                                </span>
+                            </div>
+
+                            <p>
+                                {{ review.comment|truncatewords:25 }}
+                            </p>
+
+                            <div
+                                class="d-flex flex-wrap
+                                       justify-content-between
+                                       align-items-center gap-2"
+                            >
+                                <small class="text-secondary">
+                                    {{ review.updated_at|date:"M d, Y - H:i" }}
+                                </small>
+
+                                <a
+                                    href="{% url 'admin:catalog_review_change' review.id %}"
+                                    class="btn btn-sm btn-outline-light"
+                                >
+                                    View
+                                </a>
+                            </div>
+
+                        </article>
+                    </div>
+
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-secondary">
+                            No product reviews have been submitted.
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
         </section>
 

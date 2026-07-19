@@ -74,16 +74,16 @@ class Cart:
         ).select_related(
             "category",
             "subcategory",
+            "membership_plan",
         )
 
         cart = self.cart.copy()
 
         for product in products:
-            item = cart[str(product.id)]
-
-            item["product"] = product
-            item["price"] = product.price
-            item["total_price"] = (
+            item=self.cart[str(product.id)].copy()
+            item["product"]=product
+            item["price"]=product.price
+            item["total_price"]=(
                 product.price * item["quantity"]
             )
 

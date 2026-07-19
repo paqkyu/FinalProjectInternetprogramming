@@ -1,0 +1,172 @@
+{% extends "navbarfooter.html" %}
+
+{% block title %}
+{{ exercise.name|title }} - StefGym
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <a
+            href="{% url 'workouts:exercise_list' %}"
+            class="btn btn-outline-secondary mb-4"
+        >
+            Back to Exercises
+        </a>
+
+        <div class="row g-5">
+
+            <div class="col-lg-5">
+                {% if exercise.gif_url %}
+                    <img
+                        src="{% url 'workouts:exercise_gif' exercise.id %}"
+                        alt="{{ exercise.name }}"
+                        class="img-fluid bg-light rounded
+                               border border-secondary w-100"
+                    >
+                {% else %}
+                    <div
+                        class="border border-secondary rounded
+                               d-flex align-items-center
+                               justify-content-center"
+                        style="min-height: 350px;"
+                    >
+                        <p class="text-secondary mb-0">
+                            No exercise image available
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-7">
+
+                <p class="text-info text-uppercase fw-bold mb-2">
+                    {{ exercise.body_part|default:"Exercise"|title }}
+                </p>
+
+                <h1 class="fw-bold">
+                    {{ exercise.name|title }}
+                </h1>
+
+                {% if exercise.description %}
+                    <p class="text-secondary">
+                        {{ exercise.description|linebreaks }}
+                    </p>
+                {% endif %}
+
+                <div class="row g-3 my-4">
+
+                    <div class="col-sm-6">
+                        <div class="card bg-dark text-light border-secondary h-100">
+                            <div class="card-body">
+                                <strong>Primary target</strong>
+                                <p class="mb-0">
+                                    {{ exercise.target|default:"Not specified"|title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="card bg-dark text-light border-secondary h-100">
+                            <div class="card-body">
+                                <strong>Equipment</strong>
+                                <p class="mb-0">
+                                    {{ exercise.equipment|default:"None"|title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="card bg-dark text-light border-secondary h-100">
+                            <div class="card-body">
+                                <strong>Difficulty</strong>
+                                <p class="mb-0">
+                                    {{ exercise.difficulty|default:"Not specified"|title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="card bg-dark text-light border-secondary h-100">
+                            <div class="card-body">
+                                <strong>Mechanic</strong>
+                                <p class="mb-0">
+                                    {{ exercise.mechanic|default:"Not specified"|title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {% if exercise.secondary_muscles %}
+                    <h2 class="h4">
+                        Secondary Muscles
+                    </h2>
+
+                    <ul>
+                        {% for muscle in exercise.secondary_muscles %}
+                            <li>
+                                {{ muscle|title }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if exercise.instructions %}
+                    <h2 class="h4 mt-4">
+                        Instructions
+                    </h2>
+
+                    <ol class="ps-3">
+                        {% for instruction in exercise.instructions %}
+                            <li class="mb-3">
+                                {{ instruction }}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p class="text-secondary">
+                        No instructions are available for this exercise.
+                    </p>
+                {% endif %}
+
+                {% if exercise.recommended_sets or exercise.recommended_reps %}
+                    <h2 class="h4 mt-4">
+                        Recommendation
+                    </h2>
+
+                    <p>
+                        {% if exercise.recommended_sets %}
+                            Sets: {{ exercise.recommended_sets }}
+                        {% endif %}
+
+                        {% if exercise.recommended_sets and exercise.recommended_reps %}
+                            ·
+                        {% endif %}
+
+                        {% if exercise.recommended_reps %}
+                            Reps: {{ exercise.recommended_reps }}
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                {% if exercise.calories_per_minute %}
+                    <p>
+                        Estimated calories per minute:
+                        {{ exercise.calories_per_minute }}
+                    </p>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

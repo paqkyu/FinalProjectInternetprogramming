@@ -74,6 +74,15 @@
                         Products
                     </a>          
                     </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'cart:cart_detail' %}">
+                            Cart
+                            {% if navbar_cart_count %}
+                                <span class="badge rounded-pill bg-info text-dark"> {{ navbar_cart_count }}</span> {% endif %}
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:home' %}#memberships">

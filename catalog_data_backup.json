@@ -1,0 +1,272 @@
+[
+{
+  "model": "catalog.membershipplan",
+  "pk": 1,
+  "fields": {
+    "name": "Basic",
+    "description": "-Access to weightlifting and cardio area",
+    "price": "20.00",
+    "tier_order": 1,
+    "can_book_trainer": false,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.membershipplan",
+  "pk": 2,
+  "fields": {
+    "name": "Premium",
+    "description": "-Access to weightlifting and cardio area\r\n-Can book trainers",
+    "price": "40.00",
+    "tier_order": 2,
+    "can_book_trainer": true,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.membershipplan",
+  "pk": 3,
+  "fields": {
+    "name": "Elite",
+    "description": "-Access to private weightlifting area\r\n-Access to weightlifting and cardio area\r\n-Can book trainer",
+    "price": "70.00",
+    "tier_order": 3,
+    "can_book_trainer": true,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Equipment",
+    "description": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 5,
+  "fields": {
+    "name": "Clothing",
+    "description": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 6,
+  "fields": {
+    "name": "Supplements",
+    "description": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 7,
+  "fields": {
+    "name": "Programs",
+    "description": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 8,
+  "fields": {
+    "name": "Memberships",
+    "description": ""
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "name": "Weights"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 2,
+  "fields": {
+    "category": 1,
+    "name": "Resistance Equipment"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 3,
+  "fields": {
+    "category": 1,
+    "name": "Recovery Equipment"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 4,
+  "fields": {
+    "category": 5,
+    "name": "Shirts"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 5,
+  "fields": {
+    "category": 5,
+    "name": "Shorts"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 6,
+  "fields": {
+    "category": 5,
+    "name": "Gloves"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 7,
+  "fields": {
+    "category": 6,
+    "name": "Protein"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 8,
+  "fields": {
+    "category": 6,
+    "name": "Pre-workout"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 9,
+  "fields": {
+    "category": 7,
+    "name": "Strength Programs"
+  }
+},
+{
+  "model": "catalog.subcategory",
+  "pk": 10,
+  "fields": {
+    "category": 7,
+    "name": "Cardio Programs"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 1,
+  "fields": {
+    "name": "ON - Optimum Nutrition 100% Whey Gold Standard (450 gr)",
+    "category": 6,
+    "subcategory": 7,
+    "membership_plan": null,
+    "description": "100% Whey Gold Standard\r\n\r\n \r\n\r\nWONDERFUL NEW TASTE, 100% GOLD STANDARD.\r\n\r\n\r\nOptimum Nutrition's 100% Whey Gold Standard is the world's best-selling whey protein. Provides 24 g whey protein to support muscle growth.\r\n\r\n \r\n\r\nAfter training, your body uses protein to help repair and reconstruct muscle fibers. Each serving of excellent taste contains 24 g of high-quality whey protein to support muscle growth and 5.5 g of natural BCAAs. All with just 1.4 g of fat, 0.7 g of sugars and with 1.3 g of carbohydrates.\r\n\r\n \r\n\r\nBENEFITS\r\n\r\n    24 grams whey protein with low sugar and fat levels and less than 120 calories.\r\n    5.5 grams BCAAs of course in each serving\r\n    4 grams of glutamine & glutamino acid\r\n    Enjoy the first thing in the morning and/or after training\r\n    Available in a range of different serving sizes and flavors\r\n\r\n \r\n\r\nEFORMATION Notification Number: 92425/19-07-2026",
+    "brand": "ON",
+    "fitness_goal": "general",
+    "price": "100.00",
+    "stock_quantity": 99,
+    "image_url": "https://www.protein-shop.gr/thumb/900/900/images/products/2023/05/Optimu_Whey_Gold_Standard_450_gr_Chocolate.jpg?products_id=4993",
+    "is_active": true,
+    "created_at": "2026-07-18T23:56:33.350Z",
+    "updated_at": "2026-07-19T07:18:35.252Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 2,
+  "fields": {
+    "name": "Basic Membership",
+    "category": 8,
+    "subcategory": null,
+    "membership_plan": 1,
+    "description": "Access to gym equipment during standard opening hours.",
+    "brand": "",
+    "fitness_goal": "general",
+    "price": "20.00",
+    "stock_quantity": 0,
+    "image_url": "",
+    "is_active": true,
+    "created_at": "2026-07-19T07:43:18.996Z",
+    "updated_at": "2026-07-19T07:43:18.996Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 3,
+  "fields": {
+    "name": "Premium Membership",
+    "category": 8,
+    "subcategory": null,
+    "membership_plan": 2,
+    "description": "Full gym access, fitness classes, and one monthly trainer consultation.",
+    "brand": "",
+    "fitness_goal": "general",
+    "price": "40.00",
+    "stock_quantity": 0,
+    "image_url": "",
+    "is_active": true,
+    "created_at": "2026-07-19T07:43:46.137Z",
+    "updated_at": "2026-07-19T07:43:46.137Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 4,
+  "fields": {
+    "name": "Elite",
+    "category": 8,
+    "subcategory": null,
+    "membership_plan": 3,
+    "description": "Description: Premium access with personal training and recovery services.",
+    "brand": "",
+    "fitness_goal": "general",
+    "price": "70.00",
+    "stock_quantity": 0,
+    "image_url": "",
+    "is_active": true,
+    "created_at": "2026-07-19T07:44:01.455Z",
+    "updated_at": "2026-07-19T07:44:01.455Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 5,
+  "fields": {
+    "name": "Barbell",
+    "category": 1,
+    "subcategory": null,
+    "membership_plan": null,
+    "description": "Loadable Sleeve Length\r\n16.40\"\r\nBar Length\r\n86.75\"\r\nDiameter\r\n28.5MM\r\nF Rating\r\nF8-R\r\nBar Type\r\nMen's Bars\r\nBar Use\r\nMultipurpose\r\nBushing/Bearing\r\nBushing\r\nBar Weight\r\n20KG\r\nKnurl\r\nMulti\r\nCenter Knurl\r\nNo\r\nKnurl Mark\r\nOlympic\r\nShaft Coating\r\nBright Zinc\r\nSleeve Coating\r\nBright Zinc\r\nTensile Strength\r\n190,000 PSI",
+    "brand": "GorillaGym",
+    "fitness_goal": "general",
+    "price": "1000.00",
+    "stock_quantity": 5,
+    "image_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQJBmnWImyUqfSnUQhyaTW2Xrs02w_W5B4fEsQYGSUh2OPuZKZHabjZslpAKPN_7ZgLb6ADw1IZ6uybAsROf-o_ZeFFX3MKLreYR_lZQfA0EruHiQ-HDk3ieg",
+    "is_active": true,
+    "created_at": "2026-07-19T08:00:52.604Z",
+    "updated_at": "2026-07-19T08:00:52.604Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "name": "Complete Pre 495g (Warriorlab)",
+    "category": 6,
+    "subcategory": 8,
+    "membership_plan": null,
+    "description": "Balanced pre-workout energy, focus and muscle pump\r\nComplete Pre by Warriorlab is a pre-workout formula designed to give your body the extra push it needs before training, without excessive stimulation. Its balanced composition delivers clean energy, mental focus, and muscle blood flow—without the typical “crash” of many pre-workouts.\r\n\r\nKey Features\r\n\r\n    Clean, steady energy without sudden drops\r\n    Fully disclosed dosages, no proprietary blends\r\n    Suitable for all training styles and fitness levels\r\n\r\nBenefits & Advantages\r\n\r\n    Enhances focus, motivation, and workout readiness\r\n    Improves muscle blood flow and pump\r\n    Supports endurance, strength, and training consistency\r\n\r\nWhat you will feel\r\n\r\n    Refreshing, thirst-quenching sensation that wakes up your senses\r\n    Clear mental focus and smooth energy from the start\r\n    Strong muscle pump and fullness during training\r\n    A ready, activated body for demanding workouts\r\n\r\nWhy choose it?\r\nBecause Complete Pre delivers smart, balanced pre-workout support—helping you train harder and more focused without overstimulation or unwanted crashes.\r\n\r\nIdeal combination with:\r\n\r\n    Complete 8 – for all-day muscle support\r\n    Mineral Light – for hydration and electrolytes\r\n    •BCAA – for muscle protection during intense sessions\r\n\r\n\r\nCaution:  After a few days of use of this product (as well as most of pre workouts), you may notice a \"rock\" feature. This in no way implies alteration of the product. Instead, it is a natural process, which is due to the existence of many \"hygroscopic\" ingredients (such as Arginine and Beta Alanine), which means that these ingredients attract water and hold its molecules. So when the package opens and the product comes in contact with the humidity of the environment, the poweder is \"thickened\".\r\nIt is perfectly normal and all that the consumer needs is to smash the larger pieces with a spoon to facilitate its dissolution without altering the product.\r\nThe product is recommended to be consumed within 2-4 weeks after opening the package. The longer the package is left, the more the powder lumpier it will get.",
+    "brand": "Warriorlab",
+    "fitness_goal": "general",
+    "price": "30.00",
+    "stock_quantity": 1000,
+    "image_url": "https://www.xtr.gr/images/thumbnails/590/560/detailed/828/01-136-118-02_Complete_Pre_495g_-_Strawberry_lime.jpg.webp",
+    "is_active": true,
+    "created_at": "2026-07-19T08:02:22.801Z",
+    "updated_at": "2026-07-19T08:02:22.801Z"
+  }
+}
+]

@@ -9,6 +9,8 @@ from .forms import LoginForm, RegistrationForm, AccountUpdateForm
 from django.contrib import messages
 from .models import Profile
 from catalog.forms import ProductForm
+from cart.cart import Cart
+from decimal import Decimal
 User=get_user_model()
 def is_staff_member(user):
     return(
@@ -79,17 +81,58 @@ def logout_view(request):
 
 
 @login_required
+@login_required
 def dashboard(request):
     if request.user.is_superuser:
         return redirect("accounts:owner_dashboard")
-    
+
     if is_staff_member(request.user):
         return redirect("accounts:staff_dashboard")
-    
-    profile,_=Profile.objects.get_or_create(
-        user=request.user
+
+    profile, _ = Profile.objects.get_or_create(
+        user=request.user,
     )
-    return render(request, "accounts/dashboard.html", {"profile": profile},)
+
+    member_cart = Cart(request)
+    cart_items = list(member_cart)
+
+    cart_quantity = sum(
+        item["quantity"]
+        for item in cart_items
+    )
+
+    cart_total = sum(
+        (
+            item["total_price"]
+            for item in cart_items
+        ),
+        Decimal("0.00"),
+    )
+
+    recent_reviews = (
+        Review.objects.filter(
+            user=request.user,
+        )
+        .select_related("product")
+        .order_by("-updated_at")[:5]
+    )
+
+    total_user_reviews = Review.objects.filter(
+        user=request.user,
+    ).count()
+
+    return render(
+        request,
+        "accounts/dashboard.html",
+        {
+            "profile": profile,
+            "cart_items": cart_items,
+            "cart_quantity": cart_quantity,
+            "cart_total": cart_total,
+            "recent_reviews": recent_reviews,
+            "total_user_reviews": total_user_reviews,
+        },
+    )
 @login_required
 @user_passes_test(is_owner)
 def owner_dashboard(request):

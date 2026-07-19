@@ -1,1 +1,10 @@
 .env
+db.sqlite3
+staticfiles/
+__pycache__/
+*.pyc
+.venv/
+venv/
+catalog_data.json
+catalog_data.backup.json
+users_data.json

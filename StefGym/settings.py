@@ -195,7 +195,10 @@ STRIPE_WEBHOOK_SECRET=os.environ.get(
     "STRIPE_WEBHOOK_SECRET",
     ""
 )
-STRIPE_CURRENCY="eur"
+STRIPE_CURRENCY=os.getenv(
+    "STRIPE_CURRENCY",
+    "eur",
+).lower()
 
 WORKOUTX_API_KEY=os.getenv("WORKOUTX_API_KEY", "",).strip()
 
@@ -208,3 +211,34 @@ if not DEBUG:
     CSRF_COOKIE_SECURE=True
     SECURE_CONTENT_TYPE_NOSNIFF=True
     X_FRAME_OPTIONS="DENY"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+
+        "cart": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

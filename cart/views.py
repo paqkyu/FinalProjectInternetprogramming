@@ -15,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from decimal import Decimal
 from accounts.models import Profile
+import logging
+logger = logging.getLogger(__name__)
 stripe.api_key=settings.STRIPE_SECRET_KEY
 
 # Create your views here.
@@ -259,14 +261,18 @@ def checkout(request):
                         )
                     )
 
-                except stripe.StripeError:
+                except Exception:
+                    logger.exception(
+                        "Stripe Checkout session creation failed for order %s.",
+                        order.id
+                    )
                     order.delete()
-
                     messages.error(
                         request,
-                        "Stripe could not start the payment. "
-                        "Please try again.",
+                        "Stripe checkout could not be started. Please try again.",
                     )
+                    return redirect("cart:checkout")
+
 
                 else:
                     order.stripe_checkout_session_id = (

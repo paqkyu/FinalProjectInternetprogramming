@@ -163,7 +163,6 @@ def checkout(request):
                         product = (
                             Product.objects
                             .select_for_update()
-                            .select_related("membership_plan")
                             .get(
                                 pk=item["product"].id,
                                 is_active=True,
